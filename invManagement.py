@@ -57,6 +57,12 @@ class Inventory:
         self.save_inventory()
         self.add_bottles(bottle_size, quantity, filled_with=filled_with)
 
+    def empty_bottles(self, bottle_size, quantity, filled_with='Empty'):
+        """Empties bottles if they exist"""
+        self.remove_bottles(bottle_size, quantity, filled_with=filled_with)
+        self.save_inventory()
+        self.add_bottles(bottle_size, quantity, filled_with='Empty')
+
     def display_inventory(self):
         """Prints the inventory in a readable format."""
         print('='*30)
