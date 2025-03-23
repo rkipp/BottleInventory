@@ -7,7 +7,8 @@ def print_menu():
     print("2. Add Bottles")
     print("3. Fill Bottles")
     print("4. Empty Bottles")
-    print("5. Exit")
+    print("5. Remove Bottles")
+    print("6. Exit")
 
 def main():
     inv = Inventory()
@@ -46,8 +47,17 @@ def main():
                 inv.empty_bottles(size, qty, filled_with)
             except ValueError:
                 print("Invalid input. Please enter numbers for size and quantity. Use 'Empty' for empty bottles.")
-        
+
         elif choice == "5":
+            try:
+                size = int(input("Enter bottle size (oz): "))
+                qty = int(input("Enter quantity to remove: "))
+                filled_with = input("Enter what you they were filled with: ")
+                inv.remove_bottles(size, qty, filled_with)
+            except ValueError:
+                print("Invalid input. Please enter numbers for size and quantity. Use 'Empty' for empty bottles.")
+
+        elif choice == "6":
             print("Exiting inventory manager.")
             sys.exit()
 

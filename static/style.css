@@ -1,0 +1,87 @@
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, sans-serif;
+    background-color: #A6674C;
+    margin: 20;
+    padding: 20;
+    display: flex;
+    flex-direction: column;
+    min-height: 10vh;
+}
+
+
+
+select {
+    padding: 4px;
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: wheat;
+}
+input {
+    padding: 4px;
+    font-size: 12px;
+    border-radius: 5px;
+    color: #A6674C;
+    background-color: wheat;
+    
+}
+
+/* Center the form on the page */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the form */
+    width: 300px; /* Adjust width as needed */
+    margin: 0 auto;
+}
+
+/* Left-align the labels and inputs */
+form label,
+form select,
+form input {
+    width: 100%; /* Makes the dropdown and inputs span the full width of the form */
+    text-align: left; /* Left-align the text inside */
+    margin-bottom: 10px;
+}
+/* Button container for flexbox */
+.button-container {
+    display: flex;
+    justify-content: space-between; /* Spreads buttons evenly */
+    width: 100%; /* Ensures buttons take full width of the form */
+}
+
+/* Styling for the buttons */
+form button {
+    padding: 10px 20px;
+    font-size: 10px;
+    border-radius: 5px;
+    margin-right: 2px; /* Space between buttons */
+}
+/* Additional styling for the form elements
+form select,
+form input {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-left: 0; /* Ensures left alignment */
+} */
+
+.footer-link {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 18px;
+}
+
+.footer-link a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: #ddd;
+}
+
+.footer-link a:hover {
+    background-color: #bbb;
+}

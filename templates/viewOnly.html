@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head style="background-color: #A6674C; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table {
+            width: 50%;
+            margin: auto;
+            background-color: #A6674C;
+        }
+    </style>
+    <title>Inventory</title>
+</head>
+<body>
+    <h1 align="center">Beer Bottle Inventory</h1>
+    <table border="1" style="width: 50%" align="center" background-color="brown">
+        <tr>
+            <th>Bottle Size</th>
+            <th>Quantity</th>
+            <th>Filled With</th>
+        </tr>
+        {% for item in inventory %}
+        <tr>
+            <td>{{ item['BottleSize'] }}oz</td>
+            <td>{{ item['Quantity'] }}</td>
+            <td>{{ item['FilledWith'] if item['FilledWith'] else 'Empty' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;" class="footer-link">
+        <a href="{{ url_for('index') }}">Edit</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head style="background-color: #A6674C; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table {
+            width: 10%;
+            margin: auto;
+            background-color: #A6674C;
+        }
+    </style>
+    <title>Inventory</title>
+</head>
+<body>
+    <h1 align="center">Beer Bottle Inventory</h1>
+    <table border="1" style="width: 50%" align="center" background-color="brown">
+        <tr>
+            <th>Bottle Size</th>
+            <th>Quantity</th>
+            <th>Filled With</th>
+        </tr>
+        {% for item in inventory %}
+        <tr>
+            <td>{{ item['BottleSize'] }}oz</td>
+            <td>{{ item['Quantity'] }}</td>
+            <td>{{ item['FilledWith'] if item['FilledWith'] else 'Empty' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+    
+    <h2 align="center">Update Inventory</h2>
+    <form method="post" align="left" width="100%">
+        <label for="bottle_size">Choose a Bottle Size:</label>
+            <select name="bottle_size" id="bottle_size">
+                <option value="Please Choose">Please Choose</option>
+                <option value="12">12 oz</option>
+                <option value="16">16 oz</option>
+                <option value="33">33 oz</option>
+                <option value="320">320 oz (Keg)</option>
+            </select><br>
+        <label>Quantity: <input type="text" name="quantity" required></label><br>
+        <label>Filled With: <input type="text" name="filled_with"></label><br>
+        <div class="button-container">
+            <button type="submit" name="action" value="add">Add</button>
+            <button type="submit" name="action" value="fill">Fill</button>
+            <button type="submit" name="action" value="empty">Empty</button>
+            <button type="submit" name="action" value="remove">Remove</button>
+        </div>
+    </form>
+
+    <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;" class="footer-link">
+        <a href="{{ url_for('view') }}">View Only</a>
+    </div>
+</body>
+</html>

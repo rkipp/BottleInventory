@@ -71,6 +71,3 @@ class Inventory:
             print(f"Size: {item['BottleSize']}oz | Quantity: {item['Quantity']} | Filled With: {item['FilledWith']}")
         print('='*30)
 
-# Example Usage
-inv = Inventory()
-inv.display_inventory()
