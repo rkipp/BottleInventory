@@ -20,6 +20,21 @@ class Inventory:
         except FileNotFoundError:
             return []  # Return empty inventory if file doesn't exist
 
+    def group_inventory(self):
+        """Groups the inventory by filled content."""
+        try:
+            with open(self.filename, mode='r') as file:
+                reader = csv.DictReader(file)
+                grouped_inventory = {}
+                for row in reader:
+                    filled_with = row['FilledWith'] if row['FilledWith'] != 'None' else None
+                    if filled_with not in grouped_inventory:
+                        grouped_inventory[filled_with] = []
+                    grouped_inventory[filled_with].append((row['Quantity'], row['BottleSize']+'oz'))
+                return grouped_inventory
+        except FileNotFoundError:
+            return {}
+
     def save_inventory(self):
         """Saves the inventory list to a CSV file."""
         with open(self.filename, mode='w', newline='') as file:

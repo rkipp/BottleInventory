@@ -17,20 +17,20 @@
     <h1 align="center">Beer Bottle Inventory</h1>
     <table border="1" style="width: 50%" align="center" background-color="brown">
         <tr>
-            <th>Bottle Size</th>
-            <th>Quantity</th>
             <th>Filled With</th>
+            <th>Bottles</th>
         </tr>
         {% for item in inventory %}
         <tr>
-            <td>{{ item['BottleSize'] }}oz</td>
-            <td>{{ item['Quantity'] }}</td>
-            <td>{{ item['FilledWith'] if item['FilledWith'] else 'Empty' }}</td>
+            <td>{{ item }}</td>
+            <td>
+                {% for x in inventory[item] %}
+                  {{ x[0] }}-{{ x[1] }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+              </td>
         </tr>
         {% endfor %}
     </table>
-
-
     
     <h2 align="center">Update Inventory</h2>
     <form method="post" align="left" width="100%">
@@ -43,7 +43,31 @@
                 <option value="320">320 oz (Keg)</option>
             </select><br>
         <label>Quantity: <input type="text" name="quantity" required></label><br>
-        <label>Filled With: <input type="text" name="filled_with"></label><br>
+        <label for="filled_with">Filled With:</label>
+        <select name="filled_with_select" id="filled_with_select" onchange="toggleCustomInput(this)">
+            <option value="" disabled selected>Choose or type an item</option>
+            {% for item in inventory %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+            <option value="__custom__">New</option>
+        </select>
+        
+        <input type="text" name="filled_with" id="filled_with_custom" placeholder="Enter new item" style="display:none; margin-top: 10px;" />
+        
+        <script>
+        function toggleCustomInput(select) {
+            const customInput = document.getElementById('filled_with_custom');
+            if (select.value === '__custom__') {
+                customInput.style.display = 'inline-block';
+                customInput.required = true;
+            } else {
+                customInput.style.display = 'none';
+                customInput.required = false;
+            }
+        }
+        </script>
+            <br>
+            
         <div class="button-container">
             <button type="submit" name="action" value="add">Add</button>
             <button type="submit" name="action" value="fill">Fill</button>

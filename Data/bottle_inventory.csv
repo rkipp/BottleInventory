@@ -1,7 +1,11 @@
 BottleSize,Quantity,FilledWith
-33,11,Empty
-16,36,Empty
-12,15,Empty
+33,9,Empty
+16,30,Empty
+12,16,Empty
 33,1,Pilsner
 320,1,NEIPA
-12,15,Pilsner
+12,13,Pilsner
+320,1,Crush Hour
+12,3,SNPA
+16,6,SNPA
+33,2,SNPA

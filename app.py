@@ -9,6 +9,11 @@ def view():
     inventory = inv.inventory  # Get current inventory
     return render_template("viewOnly.html", inventory=inventory)
 
+@app.route("/group")
+def view_grouped():
+    grouped_inventory = inv.group_inventory()
+    return render_template("grouped.html", inventory=inv.group_inventory())
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -28,7 +33,7 @@ def index():
 
         return redirect(url_for("index"))  # Refresh the page
 
-    inventory = inv.inventory  # Get current inventory
+    inventory = inv.group_inventory()  # Get current inventory
     return render_template("index.html", inventory=inventory)
 
 if __name__ == "__main__":

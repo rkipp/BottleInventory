@@ -20,6 +20,10 @@ def main():
         if choice == "1":
             inv.display_inventory()
 
+        elif choice == "g":
+            grouped=inv.group_inventory()
+            print(grouped)
+
         elif choice == "2":
             try:
                 size = int(input("Enter bottle size (oz): "))
