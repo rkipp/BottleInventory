@@ -33,7 +33,7 @@
     </table>
     
     <h2 align="center">Update Inventory</h2>
-    <form method="post" align="left" width="100%">
+    <form method="post" width="100%">
         <label for="bottle_size">Choose a Bottle Size:</label>
             <select name="bottle_size" id="bottle_size">
                 <option value="Please Choose">Please Choose</option>
@@ -44,9 +44,9 @@
             </select><br>
         <label>Quantity: <input type="text" name="quantity" required></label><br>
         <label for="filled_with">Filled With:</label>
-        <select name="filled_with_select" id="filled_with_select" onchange="toggleCustomInput(this)">
+        <select name="filled_with" id="filled_with_select" onchange="toggleCustomInput(this)">
             <option value="" disabled selected>Choose or type an item</option>
-            {% for item in inventory %}
+            {% for item in batches %}
                 <option value="{{ item }}">{{ item }}</option>
             {% endfor %}
             <option value="__custom__">New</option>
@@ -74,10 +74,34 @@
             <button type="submit" name="action" value="empty">Empty</button>
             <button type="submit" name="action" value="remove">Remove</button>
         </div>
+
+        
+    </form>
+
+    <form method="post" width="100%">
+        <div class="update-button-wrapper">
+            <button type="submit" name="action" value="update">Update Batches</button>
+        </div>
     </form>
 
     <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;" class="footer-link">
         <a href="{{ url_for('view') }}">View Only</a>
     </div>
+    <div class="fermenter-container">
+        {% if fermenting %}
+        <body>Coming soon</body>
+        
+        {% for beer in fermenting %}
+        <div class="fermenter">
+          <div class="fermenter-body">
+            <div class="fermenter-label">{{ beer }}</div>
+          </div>
+          <div class="fermenter-cone"></div>
+          <div class="fermenter-base"></div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    
 </body>
 </html>

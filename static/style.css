@@ -49,6 +49,13 @@ form input {
     width: 100%; /* Ensures buttons take full width of the form */
 }
 
+.update-button-wrapper {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
 /* Styling for the buttons */
 form button {
     padding: 10px 20px;
@@ -63,7 +70,6 @@ form input {
     font-size: 16px;
     border-radius: 5px;
     margin-left: 0; /* Ensures left alignment */
-} */
 
 .footer-link {
     position: fixed;
@@ -85,3 +91,80 @@ form input {
 .footer-link a:hover {
     background-color: #bbb;
 }
+
+.fermenter-container {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 999;
+}
+
+.fermenter-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    z-index: 1000;
+  }
+  
+  .fermenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .fermenter-body {
+    width: 60px;
+    height: 80px;
+    background: linear-gradient(to bottom right, #ccc, #999);
+    border: 2px solid #666;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .fermenter-label {
+    font-size: 10px;
+    color: #222;
+    text-align: center;
+    padding: 2px 4px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 3px;
+  }
+  
+  .fermenter-cone {
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-top: 30px solid #999;
+  }
+  
+  .fermenter-base {
+    width: 20px;
+    height: 6px;
+    background-color: #666;
+    border-radius: 3px;
+    margin-top: -4px; /* pull it up a bit so it's snug under the cone */
+  }
+  
+  .fermenter-legs {
+    display: flex;
+    justify-content: space-between;
+    width: 60px;
+    margin-top: 4px;
+  }
+  
+  .leg {
+    width: 4px;
+    height: 20px;
+    background-color: #555;
+  }
+  
