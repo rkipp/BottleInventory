@@ -2,3 +2,4 @@ api_key_priv.py
 api_key.py
 *.pyc
 __pycache__/
+__pycache__/brewfather.cpython-313.pyc
