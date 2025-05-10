@@ -1,3 +1,0 @@
-userid='jygJpnx4BwdG7GvNXn9hcKCwnIy2'
-
-apikey='uafXuJ5amLZYTu0W9nV3tIeRNnoOm54kqwJeIVGKGxymn0OfcLCCA8wUWuvSaPZn'

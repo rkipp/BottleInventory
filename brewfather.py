@@ -1,7 +1,7 @@
 import polars as pl
 import requests
 from requests.auth import HTTPBasicAuth
-from apikey import userid, apikey
+from api_key_priv import userid, apikey
 
 # Constants
 oz_p_liter = (1/33.8140227)
