@@ -17,6 +17,7 @@ def view_grouped():
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        print(request.form)
         action = request.form["action"]  # Check which button was clicked
 
         if action == "update":
@@ -25,7 +26,9 @@ def index():
         
         size = int(request.form["bottle_size"])
         quantity = int(request.form["quantity"])
-        filled_with = request.form["filled_with"] or request.form["filled_with_selected"]
+        filled_with = request.form["filled_with"]
+        if filled_with == "__custom__":
+            filled_with = request.form["filled_with_custom"]
 
         if action == "add":
             inv.add_bottles(size, quantity, filled_with)
@@ -44,8 +47,9 @@ def index():
     if batches.height == 0:
         batches = {"name": ["No batches found"]}
     if fermenting.height == 0:
-        fermenting = {"name": ["No fermenting batches found"]}
+        fermenting = {"name": []}
     return render_template("index.html", inventory=inventory, batches=batches["name"].to_list(), fermenting=fermenting["name"].to_list())
 
 if __name__ == "__main__":
+    brewfather.update_batches()
     app.run(debug=False)

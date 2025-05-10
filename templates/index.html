@@ -42,7 +42,7 @@
                 <option value="33">33 oz</option>
                 <option value="320">320 oz (Keg)</option>
             </select><br>
-        <label>Quantity: <input type="text" name="quantity" required></label><br>
+        <label>Quantity: <input type="text" name="quantity" autocomplete="off" required></label><br>
         <label for="filled_with">Filled With:</label>
         <select name="filled_with" id="filled_with_select" onchange="toggleCustomInput(this)">
             <option value="" disabled selected>Choose or type an item</option>
@@ -52,7 +52,7 @@
             <option value="__custom__">New</option>
         </select>
         
-        <input type="text" name="filled_with" id="filled_with_custom" placeholder="Enter new item" style="display:none; margin-top: 10px;" />
+        <input type="text" name="filled_with_custom" id="filled_with_custom" placeholder="Enter new item" style="display:none; margin-top: 10px;" />
         
         <script>
         function toggleCustomInput(select) {

@@ -10,24 +10,25 @@ lbs_p_kilo = (1/2.20462)
 
 def update_batches():
     auth = HTTPBasicAuth(userid, apikey)
-    batches = pl.DataFrame(requests.get('https://api.brewfather.app/v2/batches?limit=50&order_by=batchNo', auth=auth).json())
+    raw_batches = pl.DataFrame(requests.get('https://api.brewfather.app/v2/batches?limit=50&order_by=batchNo', auth=auth).json())
     
-    batches = (batches
+    batches = (raw_batches
                .with_columns(pl.from_epoch('brewDate', time_unit='ms').dt.date(), pl.col('recipe').struct.unnest())
                .filter(pl.col("status").is_in(["Completed", "Conditioning"]))
                .drop('recipe', "_id")
                .sort('brewDate', descending=True))
     batches.write_csv('./Data/batches.csv')
-
-def get_whats_fermenting():
-    auth = HTTPBasicAuth(userid, apikey)
-    batches = pl.DataFrame(requests.get('https://api.brewfather.app/v2/batches?limit=50&order_by=batchNo', auth=auth).json())
-    
-    batches = (batches
+    fermenting = (raw_batches
                .with_columns(pl.from_epoch('brewDate', time_unit='ms').dt.date(), pl.col('recipe').struct.unnest())
                .filter(pl.col("status").is_in(["Fermenting"]))
                .drop('recipe', "_id")
                .sort('brewDate', descending=True))
+    
+    fermenting.write_csv('./Data/fermenting.csv')
+
+
+def get_whats_fermenting():
+    batches = pl.read_csv('./Data/fermenting.csv')
     return batches
     
 

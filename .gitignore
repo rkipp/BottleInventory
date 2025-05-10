@@ -1,2 +1,4 @@
 api_key_priv.py
 api_key.py
+*.pyc
+__pycache__/
