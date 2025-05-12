@@ -1,52 +1,93 @@
+
+:root {
+  --primary-color: #FE7F2D;    /* Example: main color */
+  --secondary-color: #025a3c;  /* Example: secondary color */
+  --accent-color: #FCCA46;     /* Example: accent color */
+  --background-color: #A1C181; /* Example: background color */
+}
+
 body {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, sans-serif;
-    background-color: #A6674C;
-    margin: 20;
-    padding: 20;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: var(--background-color);
+    margin: 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     min-height: 10vh;
+    box-sizing: border-box;
 }
 
 
+table {
+  width: 100%;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+  margin: auto;
+  padding: 10px;
+  color: var(--background-color);
+  font-size: 16px;
+  border-collapse: collapse;
+  overflow: hidden;
+  border: none;
 
-select {
-    padding: 4px;
+}
+
+th, td {
+  border: 1px solid var(--primary-color);
+  padding: 8px;
+}
+
+input, select {
     font-size: 16px;
-    border-radius: 5px;
-    background-color: wheat;
-}
-input {
-    padding: 4px;
-    font-size: 12px;
-    border-radius: 5px;
-    color: #A6674C;
-    background-color: wheat;
-    
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
-/* Center the form on the page */
+input[type="text"], select {
+    font-size: 16px;
+}
+
+.layout-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.left-column {
+  flex: 0 0 60%; /* 70% width */
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
+  background-color: var(--primary-color);
+}
+
+
+/* Form Styling */
 form {
+    width: 100%,
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers the form */
-    width: 300px; /* Adjust width as needed */
-    margin: 0 auto;
+    align-items: flex-start; /* Left-align the labels and inputs */
 }
 
-/* Left-align the labels and inputs */
 form label,
 form select,
 form input {
-    width: 100%; /* Makes the dropdown and inputs span the full width of the form */
+    width: 100%; /* Makes the dropdown and inputs span the full width */
     text-align: left; /* Left-align the text inside */
     margin-bottom: 10px;
 }
-/* Button container for flexbox */
+/* Button Container */
 .button-container {
     display: flex;
-    justify-content: space-between; /* Spreads buttons evenly */
-    width: 100%; /* Ensures buttons take full width of the form */
+    justify-content: space-between;
+    width: 100%; /* Ensures buttons take full width */
+    padding-bottom: 20px;
 }
 
 .update-button-wrapper {
@@ -56,20 +97,13 @@ form input {
     z-index: 1000;
 }
 
-/* Styling for the buttons */
+/* Styling for Buttons */
 form button {
     padding: 10px 20px;
-    font-size: 10px;
+    font-size: 14px;
     border-radius: 5px;
-    margin-right: 2px; /* Space between buttons */
+    margin-right: 2px;
 }
-/* Additional styling for the form elements
-form select,
-form input {
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 5px;
-    margin-left: 0; /* Ensures left alignment */
 
 .footer-link {
     position: fixed;
@@ -92,25 +126,23 @@ form input {
     background-color: #bbb;
 }
 
+/* Fermenter Container Styling */
 .fermenter-container {
-    position: fixed;
-    top: 120px;
-    right: 20px;
+    flex: 0 0 35%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    z-index: 999;
-}
-
-.fermenter-container {
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 30px;
     z-index: 1000;
-  }
+    margin-top: 20px;
+    align-self: flex-start;
+    border-radius: 10px;
+    background-color: var(--accent-color);
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
+}
   
   .fermenter {
     display: flex;
@@ -168,3 +200,20 @@ form input {
     background-color: #555;
   }
   
+/* Responsive Design */
+@media (max-width: 768px) {
+    .layout-wrapper {
+        flex-direction: column; /* Stack sections vertically */
+    }
+
+    .left-column, .fermenter-container {
+        align-items: center; /* Center align on mobile */
+        justify-content: center; /* Center align on mobile */
+        flex: 1 1 100%; /* Full width on mobile */
+        padding-bottom: 30px;
+    }
+    
+    .fermenter-container {
+        margin: 0 auto; /* Remove top margin on mobile */
+    }
+}

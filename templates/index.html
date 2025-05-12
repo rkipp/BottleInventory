@@ -4,95 +4,93 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        table {
-            width: 10%;
-            margin: auto;
-            background-color: #A6674C;
-        }
-    </style>
     <title>Inventory</title>
 </head>
-<body>
-    <h1 align="center">Beer Bottle Inventory</h1>
-    <table border="1" style="width: 50%" align="center" background-color="brown">
-        <tr>
-            <th>Filled With</th>
-            <th>Bottles</th>
-        </tr>
-        {% for item in inventory %}
-        <tr>
-            <td>{{ item }}</td>
-            <td>
-                {% for x in inventory[item] %}
-                  {{ x[0] }}-{{ x[1] }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-              </td>
-        </tr>
-        {% endfor %}
-    </table>
-    
-    <h2 align="center">Update Inventory</h2>
-    <form method="post" width="100%">
-        <label for="bottle_size">Choose a Bottle Size:</label>
-            <select name="bottle_size" id="bottle_size">
-                <option value="Please Choose">Please Choose</option>
-                <option value="12">12 oz</option>
-                <option value="16">16 oz</option>
-                <option value="33">33 oz</option>
-                <option value="320">320 oz (Keg)</option>
-            </select><br>
-        <label>Quantity: <input type="text" name="quantity" autocomplete="off" required></label><br>
-        <label for="filled_with">Filled With:</label>
-        <select name="filled_with" id="filled_with_select" onchange="toggleCustomInput(this)">
-            <option value="" disabled selected>Choose or type an item</option>
-            {% for item in batches %}
-                <option value="{{ item }}">{{ item }}</option>
+<body align="center">
+    <div class="layout-wrapper">
+        <div class="left-column">
+        <h1 align="center">Lil Bev's Inventory</h1>
+        <table>
+            <tr>
+                <th>Filled With</th>
+                <th>Bottles</th>
+            </tr>
+            {% for item in inventory %}
+            <tr>
+                <td>{{ item }}</td>
+                <td>
+                    {% for x in inventory[item] %}
+                    {{ x[0] }}-{{ x[1] }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
             {% endfor %}
-            <option value="__custom__">New</option>
-        </select>
+        </table>
         
-        <input type="text" name="filled_with_custom" id="filled_with_custom" placeholder="Enter new item" style="display:none; margin-top: 10px;" />
-        
-        <script>
-        function toggleCustomInput(select) {
-            const customInput = document.getElementById('filled_with_custom');
-            if (select.value === '__custom__') {
-                customInput.style.display = 'inline-block';
-                customInput.required = true;
-            } else {
-                customInput.style.display = 'none';
-                customInput.required = false;
-            }
-        }
-        </script>
-            <br>
+        <h2 align="center">Update Inventory</h2>
+        <form method="post" width="100%">
+            <label for="bottle_size">Choose a Bottle Size:</label>
+                <select name="bottle_size" id="bottle_size">
+                    <option value="Please Choose">Please Choose</option>
+                    <option value="12">12 oz</option>
+                    <option value="16">16 oz</option>
+                    <option value="33">33 oz</option>
+                    <option value="320">320 oz (Keg)</option>
+                </select>
+            <label for="quantity">Quantity:</label>
+            <select type="text" id="quantity" name="quantity" autocomplete="off" required>
+                <option value="" disabled selected>Choose a quantity</option>
+                {% for i in range(1,51) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <label for="filled_with">Filled With:</label>
+            <select name="filled_with" id="filled_with_select" onchange="toggleCustomInput(this)">
+                <option value="" disabled selected>Choose or type an item</option>
+                {% for item in batches %}
+                    <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+                <option value="__custom__">New</option>
+            </select>
             
-        <div class="button-container">
-            <button type="submit" name="action" value="add">Add</button>
-            <button type="submit" name="action" value="fill">Fill</button>
-            <button type="submit" name="action" value="empty">Empty</button>
-            <button type="submit" name="action" value="remove">Remove</button>
-        </div>
+            <input type="text" name="filled_with_custom" id="filled_with_custom" placeholder="Enter new item" style="display:none; margin-top: 10px;" />
+            
+            <script>
+            function toggleCustomInput(select) {
+                const customInput = document.getElementById('filled_with_custom');
+                if (select.value === '__custom__') {
+                    customInput.style.display = 'inline-block';
+                    customInput.required = true;
+                } else {
+                    customInput.style.display = 'none';
+                    customInput.required = false;
+                }
+            }
+            </script>
+                
+                
+            <div class="button-container">
+                <button type="submit" name="action" value="add">Add</button>
+                <button type="submit" name="action" value="fill">Fill</button>
+                <button type="submit" name="action" value="empty">Empty</button>
+                <button type="submit" name="action" value="remove">Remove</button>
+            </div>
 
-        
-    </form>
+            
+        </form>
 
-    <form method="post" width="100%">
-        <div class="update-button-wrapper">
-            <button type="submit" name="action" value="update">Update Batches</button>
-        </div>
-    </form>
-
-    <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;" class="footer-link">
-        <a href="{{ url_for('view') }}">View Only</a>
+        <form method="post" width="100%">
+            <div class="update-button-wrapper">
+                <button type="submit" name="action" value="update">Update Batches</button>
+            </div>
+        </form>
     </div>
-    <div class="fermenter-container">
+    <div class="fermenter-container" align="center">
         {% if fermenting %}
         <body>Coming soon</body>
-        
         {% for beer in fermenting %}
         <div class="fermenter">
+
           <div class="fermenter-body">
             <div class="fermenter-label">{{ beer }}</div>
           </div>
@@ -102,6 +100,7 @@
         {% endfor %}
         {% endif %}
       </div>
+    </div>
     
 </body>
 </html>
