@@ -210,10 +210,32 @@ form button {
         align-items: center; /* Center align on mobile */
         justify-content: center; /* Center align on mobile */
         flex: 1 1 100%; /* Full width on mobile */
-        padding-bottom: 30px;
+        padding: 10px;
+        margin: 0 auto;
+        width: 90%;
+    }
+    table, form{
+        width: 100%; /* Full width on mobile */
+    }
+
+    .button-container {
+        width: 100%; /* Full width on mobile */
+        flex-direction: column; /* Stack buttons vertically */
+        margin: 0 auto;
+        gap: 10px;
+        align-items: center; /* Center align on mobile */
+    }
+    
+    .update-button-wrapper {
+        position: static; /* Change to static for mobile */
+        bottom: auto; /* Reset bottom position */
+        left: auto; /* Reset left position */
+        margin: 10px 0; /* Add margin for spacing */
     }
     
     .fermenter-container {
         margin: 0 auto; /* Remove top margin on mobile */
     }
 }
+
+
