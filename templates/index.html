@@ -20,7 +20,7 @@
                 <td>{{ item }}</td>
                 <td>
                     {% for x in inventory[item] %}
-                    {{ x[0] }}-{{ x[1] }}{% if not loop.last %}, {% endif %}
+                    {{ x[0] }} | {{ x[1] }}{% if not loop.last %}<br>{% endif %}
                     {% endfor %}
                 </td>
             </tr>
