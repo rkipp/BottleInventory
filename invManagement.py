@@ -92,5 +92,5 @@ class Inventory:
     def calculate_empty_capacity(self):
         """Calculates the total empty capacity in the inventory."""
         total_capacity = sum(item['BottleSize'] * item['Quantity'] for item in self.inventory if item['FilledWith'] == 'Empty')
-        return (int(total_capacity/128)*100)/100  # Convert to gallons and round to 2 decimal places
+        return round(total_capacity/128, 2)# Convert to gallons and round to 2 decimal places
 
