@@ -49,5 +49,5 @@ def index():
     return render_template("index.html", inventory=inventory, batches=batches, fermenting=fermenting)
 
 if __name__ == "__main__":
-    #brewfather.update_batches()
+    brewfather.update_batches()
     app.run(debug=False)
