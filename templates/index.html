@@ -85,8 +85,9 @@
             </div>
         </form>
     </div>
+    {% if fermenting %}
     <div class="fermenter-container" align="center">
-        {% if fermenting %}
+        
         <body>Coming soon</body>
         {% for beer in fermenting %}
         <div class="fermenter">
@@ -98,9 +99,10 @@
           <div class="fermenter-base"></div>
         </div>
         {% endfor %}
-        {% endif %}
-      </div>
+        
     </div>
+    {% endif %}
+</div>
     
 </body>
 </html>

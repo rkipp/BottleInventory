@@ -20,7 +20,7 @@ def update_batches():
     batches.write_csv('./Data/batches.csv')
     fermenting = (raw_batches
                .with_columns(pl.from_epoch('brewDate', time_unit='ms').dt.date(), pl.col('recipe').struct.unnest())
-               .filter(pl.col("status").is_in(["Fermenting"]))
+               .filter(pl.col("status").is_in(["Fermenting", "Planned",]))
                .drop('recipe', "_id")
                .sort('brewDate', descending=True))
     
@@ -34,6 +34,8 @@ def get_whats_fermenting():
 
 def get_batches():
     batches = pl.read_csv('./Data/batches.csv')
+    if batches.height == 0:
+        batches = pl.DataFrame({"name": ["No batches found"]})
     return batches
 
 if __name__ == "__main__":

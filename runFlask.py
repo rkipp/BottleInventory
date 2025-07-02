@@ -42,14 +42,12 @@ def index():
         return redirect(url_for("index"))  # Refresh the page
 
     inventory = inv.group_inventory()  # Get current inventory
-    batches = brewfather.get_batches()  # Get batches from Brewfather
-    fermenting = brewfather.get_whats_fermenting()  # Get fermenting batches
-    if batches.height == 0:
-        batches = {"name": ["No batches found"]}
-    if fermenting.height == 0:
-        fermenting = {"name": []}
-    return render_template("index.html", inventory=inventory, batches=batches["name"].to_list(), fermenting=fermenting["name"].to_list())
+    batches = brewfather.get_batches()["name"].to_list()  # Get batches from Brewfather
+    fermenting = brewfather.get_whats_fermenting()["name"].to_list()  # Get fermenting batches
+    if len(fermenting) == 0:
+        fermenting = False
+    return render_template("index.html", inventory=inventory, batches=batches, fermenting=fermenting)
 
 if __name__ == "__main__":
-    brewfather.update_batches()
-    app.run(debug=True)
+    #brewfather.update_batches()
+    app.run(debug=False)
