@@ -46,7 +46,7 @@ def index():
     fermenting = brewfather.get_whats_fermenting()["name"].to_list()  # Get fermenting batches
     if len(fermenting) == 0:
         fermenting = False
-    return render_template("index.html", inventory=inventory, batches=batches, fermenting=fermenting)
+    return render_template("index.html", inventory=inventory, batches=batches, fermenting=fermenting, empty_capacity=inv.calculate_empty_capacity())
 
 if __name__ == "__main__":
     brewfather.update_batches()

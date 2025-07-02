@@ -27,7 +27,9 @@ class Inventory:
                 reader = csv.DictReader(file)
                 grouped_inventory = {}
                 for row in reader:
-                    filled_with = row['FilledWith'] if row['FilledWith'] != 'None' else None
+                    if row['FilledWith'] in ['None', 'Empty']:
+                        continue
+                    filled_with = row['FilledWith']
                     if filled_with not in grouped_inventory:
                         grouped_inventory[filled_with] = []
                     grouped_inventory[filled_with].append((row['Quantity'], row['BottleSize']+'oz'))
@@ -85,4 +87,10 @@ class Inventory:
 
             print(f"Size: {item['BottleSize']}oz | Quantity: {item['Quantity']} | Filled With: {item['FilledWith']}")
         print('='*30)
+        
+
+    def calculate_empty_capacity(self):
+        """Calculates the total empty capacity in the inventory."""
+        total_capacity = sum(item['BottleSize'] * item['Quantity'] for item in self.inventory if item['FilledWith'] == 'Empty')
+        return (int(total_capacity/128)*100)/100  # Convert to gallons and round to 2 decimal places
 
