@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2 style="text-align:center;">Edit Bottle Inventory</h2>
+
+    <form method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th>Bottle Size (oz)</th>
+                    <th>Quantity</th>
+                    <th>Filled With</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in inventory %}
+                <tr>
+                    <td>
+                        <input type="number" name="BottleSize" value="{{ row.BottleSize }}">
+                    </td>
+                    <td>
+                        <input type="number" name="Quantity" value="{{ row.Quantity }}">
+                    </td>
+                    <td>
+                        <input type="text" name="FilledWith" value="{{ row.FilledWith }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="text-align:center;">
+            <button type="submit">Save Changes</button>
+        </div>
+    </form>
+</body>
+</html>

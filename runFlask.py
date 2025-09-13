@@ -5,6 +5,28 @@ import brewfather
 app = Flask(__name__)
 inv = Inventory()  # Load inventory from CSV
 
+@app.route("/edit", methods=["GET", "POST"])
+def edit_inventory():
+    inv = Inventory()
+    if request.method == "POST":
+        # Collect parallel lists of inputs
+        sizes = request.form.getlist("BottleSize")
+        quantities = request.form.getlist("Quantity")
+        filleds = request.form.getlist("FilledWith")
+
+        new_data = []
+        for size, qty, filled in zip(sizes, quantities, filleds):
+            new_data.append({
+                "BottleSize": size,
+                "Quantity": qty,
+                "FilledWith": filled if filled else "Empty"
+            })
+
+        inv.replace_inventory(new_data)
+        return redirect(url_for("edit_inventory"))
+
+    return render_template("edit.html", inventory=inv.get_inventory())
+
 @app.route("/view")
 def view():
     inventory = inv.inventory  # Get current inventory

@@ -94,3 +94,43 @@ class Inventory:
         total_capacity = sum(item['BottleSize'] * item['Quantity'] for item in self.inventory if item['FilledWith'] == 'Empty')
         return round(total_capacity/128, 2)# Convert to gallons and round to 2 decimal places
 
+    def get_inventory(self):
+        """Returns the current inventory as a list of dictionaries."""
+        return self.inventory
+
+    def update_row(self, index, bottle_size=None, quantity=None, filled_with=None):
+        """Updates a single row in the inventory by index."""
+        if 0 <= index < len(self.inventory):
+            if bottle_size is not None:
+                self.inventory[index]['BottleSize'] = int(bottle_size)
+            if quantity is not None:
+                self.inventory[index]['Quantity'] = int(quantity)
+            if filled_with is not None:
+                self.inventory[index]['FilledWith'] = filled_with if filled_with != 'None' else None
+            self.save_inventory()
+        else:
+            warnings.warn(f"Row {index} does not exist in inventory.")
+
+    def delete_row(self, index):
+        """Deletes a row from the inventory by index."""
+        if 0 <= index < len(self.inventory):
+            self.inventory.pop(index)
+            self.save_inventory()
+        else:
+            warnings.warn(f"Row {index} does not exist in inventory.")
+
+    def replace_inventory(self, new_inventory):
+        """
+        Replaces the entire inventory with a new list of dicts.
+        Example new_inventory: 
+        [{'BottleSize': 12, 'Quantity': 6, 'FilledWith': 'IPA'}, ...]
+        """
+        self.inventory = [
+            {
+                'BottleSize': int(item['BottleSize']),
+                'Quantity': int(item['Quantity']),
+                'FilledWith': item['FilledWith'] if item['FilledWith'] != 'None' else None
+            }
+            for item in new_inventory
+        ]
+        self.save_inventory()
