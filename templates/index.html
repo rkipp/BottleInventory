@@ -8,8 +8,11 @@
 </head>
 <body align="center">    
     <header>
-        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
-        <h1>Inventory</h1>
+        <div class="center-group">
+            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
+            <h1>Inventory</h1>
+        </div>
+        <button type="submit" name="action" value="update">Update Batches</button>
     </header>
     <div class="layout-wrapper">
         <div class="left-column">
@@ -82,11 +85,7 @@
             
         </form>
 
-        <form method="post" width="100%">
-            <div class="update-button-wrapper">
-                <button type="submit" name="action" value="update">Update Batches</button>
-            </div>
-        </form>
+
     </div>
     {% if fermenting %}
     <div class="fermenter-container" align="center">

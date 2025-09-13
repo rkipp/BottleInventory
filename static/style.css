@@ -12,21 +12,45 @@
 }
 
 header {
-  padding: 20px;
+  padding: 5px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   display: flex;
   gap: 15px;
   background-color: var(--tertiary-color);
   color: var(--background-color);
 }
 
-header .logo {
-  width: 150px; /* Adjust the height as needed */
-  display: block;
-  margin: 15px; /* Space between logo and title */
+.center-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  margin: 5px;
+  gap: 5px;
 }
 
+header .logo {
+  width: 100px; /* Adjust the height as needed */
+  height: auto;
+}
+
+header h1 {
+  margin: 0;
+  color: var(--background-color);
+}
+
+header button {
+  align-self: right;;
+  font-size: 8px;
+  border: none;
+  background-color: var(--background-color);
+  color: var(--tertiary-color);
+  cursor: pointer;
+}
+header button:hover {
+  background-color: var(--accent-color);
+}
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: var(--background-color);
@@ -120,6 +144,10 @@ input[type="text"], select {
   color: var(--background-color);
 }
 
+button{
+  color: var(--tertiary-color);
+  background-color: var(--secondary-color);
+}
 
 /* Form Styling */
 form {
@@ -153,10 +181,19 @@ form input {
 
 /* Styling for Buttons */
 form button {
-    padding: 10px 20px;
     font-size: 14px;
-    border-radius: 5px;
     margin-right: 2px;
+    width: 150px;
+}
+
+form select, option{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;          
+  font-size: 10px;
+  margin-right: 2px;
+  background-color: var(--secondary-color);
+  color: var(--tertiary-color)
 }
 
 .footer-link {
@@ -173,11 +210,11 @@ form button {
     color: #333;
     padding: 10px 15px;
     border-radius: 5px;
-    background-color: #ddd;
+    background-color: var(--background-color);
 }
 
 .footer-link a:hover {
-    background-color: #bbb;
+    background-color: var(--tertiary-color);
 }
 
 /* Fermenter Container Styling */
@@ -280,7 +317,7 @@ form button {
         gap: 10px;
         align-items: center; /* Center align on mobile */
     }
-    
+
     .update-button-wrapper {
         position: static; /* Change to static for mobile */
         bottom: auto; /* Reset bottom position */
