@@ -1,16 +1,39 @@
 
 :root {
-  --primary-color: #FE7F2D;    /* Example: main color */
-  --secondary-color: #025a3c;  /* Example: secondary color */
-  --accent-color: #FCCA46;     /* Example: accent color */
-  --background-color: #A1C181; /* Example: background color */
+  --primary-color: #ff6d4d;
+  --secondary-color: #ffdd78;
+  --accent-color: #025a3c;
+  --background-color: #ece4ff;
+  --tertiary-color: #5170ff 
+}
+
+*{
+  border-radius: 12px;
+}
+
+header {
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 15px;
+  background-color: var(--tertiary-color);
+  color: var(--background-color);
+}
+
+header .logo {
+  width: 150px; /* Adjust the height as needed */
+  display: block;
+  margin: 15px; /* Space between logo and title */
 }
 
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: var(--background-color);
+    color: var(--tertiary-color);
     margin: 20px;
     padding: 20px;
+    gap: 20px;
     display: flex;
     flex-direction: column;
     min-height: 10vh;
@@ -21,20 +44,50 @@ body {
 table {
   width: 100%;
   background-color: var(--secondary-color);
-  border-radius: 10px;
   margin: auto;
   padding: 10px;
-  color: var(--background-color);
+  color: var(--tertiary-color);
   font-size: 16px;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;;
   overflow: hidden;
-  border: none;
+  border: 2px solid var(--primary-color);
 
 }
 
 th, td {
-  border: 1px solid var(--primary-color);
+  border: none;
   padding: 8px;
+  text-align: center;
+  background-color: var(--secondary-color);
+  border-radius: 0px;
+}
+
+th {
+  background-color: var(--tertiary-color);
+  color: var(--secondary-color);
+  border-radius: 0;
+  font-size: 18px;
+}
+
+
+th:first-child {
+  border-top-left-radius: 12px;
+}
+th:last-child {
+  border-top-right-radius: 12px;
+}
+th:first-child {
+  border-bottom-left-radius: 12px;
+}
+th:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+thead {
+  display: table-header-group; /* ensures proper header layout */
+  box-shadow: 0 2px 0 0 #fff;  /* 2px line under header */
+  background-color: var(--tertiary-color);
 }
 
 input, select {
@@ -64,6 +117,7 @@ input[type="text"], select {
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
   background-color: var(--primary-color);
+  color: var(--background-color);
 }
 
 
@@ -139,6 +193,7 @@ form button {
     align-self: flex-start;
     border-radius: 10px;
     background-color: var(--accent-color);
+    color: var(--background-color);
     padding: 20px;
     box-sizing: border-box;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
@@ -164,7 +219,7 @@ form button {
   
   .fermenter-label {
     font-size: 10px;
-    color: #222;
+    color: var(--tertiary-color);
     text-align: center;
     padding: 2px 4px;
     background-color: rgba(255, 255, 255, 0.6);

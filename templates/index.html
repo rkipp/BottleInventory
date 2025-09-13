@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head style="background-color: #A6674C; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body align="center">
+<body align="center">    
+    <header>
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
+        <h1>Inventory</h1>
+    </header>
     <div class="layout-wrapper">
         <div class="left-column">
-        <h1 align="center">Lil Bev's Inventory</h1>
         <table>
             <tr>
                 <th>Filled With</th>
