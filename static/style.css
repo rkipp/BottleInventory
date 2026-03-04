@@ -5,7 +5,7 @@
   --background-color: #ece4ff;
   --tertiary-color: #5170ff;
   --table-cell-color: #d4edda;
-  --table-header-color: #025a3c 
+  --table-header-color: #025a3c;
 }
 
 *{
@@ -112,7 +112,7 @@ th:last-child {
 thead {
   display: table-header-group; /* ensures proper header layout */
   box-shadow: 0 2px 0 0 #fff;  /* 2px line under header */
-  background-color: var(--tertiary-color);
+  background-color: var(--table-header-color);
 }
 
 input, select {
@@ -215,7 +215,7 @@ form select, option{
 }
 
 .footer-link a:hover {
-    background-color: var(--tertiary-color);
+    background-color: var(--table-header-color);
 }
 
 /* Fermenter Container Styling */
@@ -295,38 +295,93 @@ form select, option{
   
 /* Responsive Design */
 @media (max-width: 768px) {
-    .layout-wrapper {
-        flex-direction: column; /* Stack sections vertically */
+    body {
+        margin: 10px;
+        padding: 10px;
     }
 
-    .left-column, .fermenter-container {
-        align-items: center; /* Center align on mobile */
-        justify-content: center; /* Center align on mobile */
-        flex: 1 1 100%; /* Full width on mobile */
-        padding: 10px;
-        margin: 0 auto;
-        width: 90%;
+    .layout-wrapper {
+        flex-direction: column;
+        gap: 12px;
     }
-    table, form{
-        width: 100%; /* Full width on mobile */
+
+    .left-column {
+        flex: 1 1 100%;
+        width: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+    .right-column {
+        flex: 1 1 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .fermenter-container {
+        flex: 1 1 100%;
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th {
+        font-size: 14px;
+        padding: 6px 4px;
+    }
+
+    td {
+        padding: 6px 4px;
+    }
+
+    form {
+        width: 100%;
     }
 
     .button-container {
-        width: 100%; /* Full width on mobile */
-        flex-direction: column; /* Stack buttons vertically */
-        margin: 0 auto;
-        gap: 10px;
-        align-items: center; /* Center align on mobile */
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .button-container button {
+        width: 100%;
     }
 
     .update-button-wrapper {
-        position: static; /* Change to static for mobile */
-        bottom: auto; /* Reset bottom position */
-        left: auto; /* Reset left position */
-        margin: 10px 0; /* Add margin for spacing */
+        position: static;
+        bottom: auto;
+        left: auto;
+        margin: 10px 0;
     }
-    
-    .fermenter-container {
-        margin: 0 auto; /* Remove top margin on mobile */
+
+    header {
+        flex-wrap: nowrap;
+        gap: 6px;
+        padding: 4px 8px;
+    }
+
+    header h1 {
+        font-size: 16px;
+    }
+
+    header .logo {
+        width: 50px;
+    }
+
+    header button {
+        font-size: 10px;
+        padding: 4px 8px;
+        white-space: nowrap;
+    }
+
+    nav a {
+        font-size: 12px;
+        padding: 4px 8px;
     }
 }
