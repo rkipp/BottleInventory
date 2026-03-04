@@ -178,6 +178,12 @@ def bjcp():
     )
 
 
+@app.route("/offflavors")
+def offflavors():
+    """Static off-flavors reference page for use during judging."""
+    return render_template("offflavors.html")
+
+
 if __name__ == "__main__":
     brewfather.update_batches()
     app.run(debug=True, port=8085)

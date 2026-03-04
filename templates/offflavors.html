@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Off-Flavors Reference</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="center-group">
+            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
+            <h1>Off-Flavors</h1>
+        </div>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('bjcp') }}">Style Guide</a>
+        </nav>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search flavors, causes, descriptors…" oninput="filterCards()">
+        <select id="categoryFilter" onchange="filterCards()">
+            <option value="">All Categories</option>
+            <option value="fermentation">Fermentation</option>
+            <option value="process">Process</option>
+            <option value="ingredients">Ingredients</option>
+            <option value="packaging">Packaging &amp; Stability</option>
+        </select>
+    </div>
+
+    <div class="count-label" id="countLabel"></div>
+
+    <div class="style-grid" id="flavorGrid">
+
+        <!-- FERMENTATION -->
+
+        <div class="style-card" data-category="fermentation" data-search="acetaldehyde green apple raw cider yeast" onclick="openModal(this)"
+             data-name="Acetaldehyde"
+             data-descriptor="Green apple, raw cider, latex paint"
+             data-category-label="Fermentation"
+             data-cause="Incomplete fermentation; yeast removed or crashed too early before fully reducing acetaldehyde (an ethanol precursor)."
+             data-fix="Allow more conditioning time; rouse yeast; ensure adequate pitching rate and healthy fermentation."
+             data-threshold="Low levels acceptable in some lagers and ciders; a fault in most ales.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Acetaldehyde</div>
+            <div class="flavor-descriptor">Green apple, raw cider</div>
+        </div>
+
+        <div class="style-card" data-category="fermentation" data-search="diacetyl butter butterscotch VDK vicinal diketone" onclick="openModal(this)"
+             data-name="Diacetyl"
+             data-descriptor="Butter, butterscotch, slickness on palate"
+             data-category-label="Fermentation"
+             data-cause="Incomplete diacetyl rest; yeast stressed or removed too early; bacterial contamination (Pediococcus, Lactobacillus)."
+             data-fix="Perform a diacetyl rest (raise temp to 68°F/20°C for 2 days near end of fermentation); ensure healthy yeast; check sanitation."
+             data-threshold="A serious fault in most styles. Acceptable only in some English ales at very low levels.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Diacetyl</div>
+            <div class="flavor-descriptor">Butter, butterscotch</div>
+        </div>
+
+        <div class="style-card" data-category="fermentation" data-search="fusel alcohol hot solvent harsh higher alcohols" onclick="openModal(this)"
+             data-name="Fusel Alcohols"
+             data-descriptor="Hot, harsh, solvent-like, burn"
+             data-category-label="Fermentation"
+             data-cause="High fermentation temperature; underpitching; nutrient-deficient wort; poor yeast health."
+             data-fix="Ferment at lower, stable temperatures; pitch adequate healthy yeast; ensure good wort nutrition."
+             data-threshold="A fault in most styles. Some warming alcohol acceptable in strong ales and barleywines.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Fusel Alcohols</div>
+            <div class="flavor-descriptor">Hot, harsh, solvent-like</div>
+        </div>
+
+        <div class="style-card" data-category="fermentation" data-search="esters fruity estery banana isoamyl acetate ethyl acetate nail polish" onclick="openModal(this)"
+             data-name="Excessive Esters"
+             data-descriptor="Fruity, banana, pear, nail polish, solvent"
+             data-category-label="Fermentation"
+             data-cause="High fermentation temperature; overpitching; certain yeast strains; low gravity wort."
+             data-fix="Ferment cooler; select appropriate yeast strain; avoid overpitching."
+             data-threshold="Desired in hefeweizens and Belgian ales; a fault when out of style or overwhelming.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Excessive Esters</div>
+            <div class="flavor-descriptor">Banana, pear, nail polish</div>
+        </div>
+
+        <div class="style-card" data-category="fermentation" data-search="sulfur rotten egg match struck hydrogen sulfide DMS" onclick="openModal(this)"
+             data-name="Sulfur / H₂S"
+             data-descriptor="Rotten eggs, struck match, cooked vegetables"
+             data-category-label="Fermentation"
+             data-cause="Yeast autolysis; certain lager yeast strains; inadequate zinc; bacterial contamination; excess trub."
+             data-fix="Use fresh healthy yeast; ensure good yeast nutrition (zinc); remove beer from trub promptly; proper lagering."
+             data-threshold="A trace acceptable in some lager styles. A serious fault in ales and when pronounced.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Sulfur / H₂S</div>
+            <div class="flavor-descriptor">Rotten eggs, struck match</div>
+        </div>
+
+        <div class="style-card" data-category="fermentation" data-search="phenolic clove spicy medicinal plastic band-aid chlorophenol" onclick="openModal(this)"
+             data-name="Phenolic"
+             data-descriptor="Clove, spicy, medicinal, plastic, band-aid"
+             data-category-label="Fermentation"
+             data-cause="Wild yeast or bacterial contamination; chlorinated water reacting with organics; certain yeast strains (POF+); sanitizer residue."
+             data-fix="Improve sanitation; use chloramine-free water (add campden tablet); ensure equipment is chlorine-free."
+             data-threshold="Clove phenolics are desirable in hefeweizens and Belgian witbiers. Band-aid/medicinal is always a fault.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Phenolic</div>
+            <div class="flavor-descriptor">Clove, medicinal, band-aid</div>
+        </div>
+
+        <div class="style-card" data-category="fermentation" data-search="autolysis yeast meaty brothy soy sauce rubbery" onclick="openModal(this)"
+             data-name="Autolysis"
+             data-descriptor="Meaty, brothy, rubbery, soy sauce"
+             data-category-label="Fermentation"
+             data-cause="Dead yeast cells rupturing and releasing intracellular contents; leaving beer on yeast too long at warm temperatures."
+             data-fix="Remove beer from yeast promptly after fermentation; store at cold temperatures; avoid rousing yeast unnecessarily."
+             data-threshold="Always a fault. More common in homebrew left on yeast for weeks at room temperature.">
+            <div class="style-id">Fermentation</div>
+            <div class="style-name">Autolysis</div>
+            <div class="flavor-descriptor">Meaty, brothy, rubbery</div>
+        </div>
+
+        <!-- PROCESS -->
+
+        <div class="style-card" data-category="process" data-search="DMS dimethyl sulfide cooked corn vegetables cabbage" onclick="openModal(this)"
+             data-name="DMS"
+             data-descriptor="Cooked corn, creamed corn, cooked vegetables"
+             data-category-label="Process"
+             data-cause="Inadequate wort boil (too short or covered); slow chilling; SMM from pale malt converting to DMS; bacterial contamination."
+             data-fix="Vigorous rolling boil for 60+ minutes uncovered; chill wort rapidly; avoid covering kettle during boil."
+             data-threshold="Very low levels acceptable in some lagers. A fault in most styles, especially ales.">
+            <div class="style-id">Process</div>
+            <div class="style-name">DMS</div>
+            <div class="flavor-descriptor">Cooked corn, canned vegetables</div>
+        </div>
+
+        <div class="style-card" data-category="process" data-search="astringent tannin harsh dry puckering grain husk" onclick="openModal(this)"
+             data-name="Astringency"
+             data-descriptor="Harsh dryness, puckering, grape skin tannins"
+             data-category-label="Process"
+             data-cause="Over-sparging; high sparge water temperature; crushing grain too fine; prolonged grain steeping; over-hopping."
+             data-fix="Keep sparge water below 170°F/77°C; don't over-sparge; adjust grain crush; limit contact time."
+             data-threshold="Always a fault. Distinct from the pleasant dryness in dry stouts or roasty bitterness.">
+            <div class="style-id">Process</div>
+            <div class="style-name">Astringency</div>
+            <div class="flavor-descriptor">Harsh, puckering, grape skin</div>
+        </div>
+
+        <div class="style-card" data-category="process" data-search="grainy husky raw cereal starchy" onclick="openModal(this)"
+             data-name="Grainy / Husky"
+             data-descriptor="Raw grain, cereal, husks, starchy"
+             data-category-label="Process"
+             data-cause="Under-modified malt; incomplete mash conversion; over-crushed grain; high adjunct percentage without proper enzymes."
+             data-fix="Ensure full mash conversion (iodine test); proper crush; adequate mash time and temperature."
+             data-threshold="Low levels acceptable in some styles. Distinct from the pleasant malt character in pale ales.">
+            <div class="style-id">Process</div>
+            <div class="style-name">Grainy / Husky</div>
+            <div class="flavor-descriptor">Raw grain, cereal, husks</div>
+        </div>
+
+        <div class="style-card" data-category="process" data-search="chlorine medicinal plastic swimming pool TCP" onclick="openModal(this)"
+             data-name="Chlorine / TCP"
+             data-descriptor="Swimming pool, medicinal, plastic, TCP"
+             data-category-label="Process"
+             data-cause="Chlorinated tap water reacting with phenols to form chlorophenols; chlorine-based sanitizer residue."
+             data-fix="Use campden tablets (potassium metabisulfite) to neutralize chloramines; ensure sanitizer is fully rinsed or use no-rinse sanitizers correctly."
+             data-threshold="Always a fault, even at very low levels.">
+            <div class="style-id">Process</div>
+            <div class="style-name">Chlorine / TCP</div>
+            <div class="flavor-descriptor">Swimming pool, plastic, TCP</div>
+        </div>
+
+        <div class="style-card" data-category="process" data-search="metallic blood coins iron tin pennies" onclick="openModal(this)"
+             data-name="Metallic"
+             data-descriptor="Blood, coins, iron, tinny"
+             data-category-label="Process"
+             data-cause="Contact with reactive metals (iron, copper oxidation); poor quality water; metal brewing equipment; old cans."
+             data-fix="Use stainless or food-grade equipment; treat water; avoid oxidation during transfer."
+             data-threshold="Always a fault.">
+            <div class="style-id">Process</div>
+            <div class="style-name">Metallic</div>
+            <div class="flavor-descriptor">Blood, coins, iron, tinny</div>
+        </div>
+
+        <!-- INGREDIENTS -->
+
+        <div class="style-card" data-category="ingredients" data-search="skunky lightstruck mercaptan sunlight UV isohumulone" onclick="openModal(this)"
+             data-name="Lightstruck / Skunky"
+             data-descriptor="Skunk, cat musk, mercaptan"
+             data-category-label="Ingredients"
+             data-cause="UV or visible light reacting with isohumulones (hop compounds) to produce 3-methyl-2-butene-1-thiol (MBT). Even brief light exposure."
+             data-fix="Store beer in dark conditions; use brown bottles (not green or clear); avoid fluorescent lighting during packaging."
+             data-threshold="Always a fault. One of the most recognizable off-flavors. Happens extremely quickly in clear/green glass.">
+            <div class="style-id">Ingredients</div>
+            <div class="style-name">Lightstruck / Skunky</div>
+            <div class="flavor-descriptor">Skunk, cat musk</div>
+        </div>
+
+        <div class="style-card" data-category="ingredients" data-search="hop grassy vegetal plant fresh cut grass over hopped" onclick="openModal(this)"
+             data-name="Grassy / Vegetal Hops"
+             data-descriptor="Fresh cut grass, green plant, hay"
+             data-category-label="Ingredients"
+             data-cause="Excessive dry hopping time; using too many whole hops; hop material breaking down; old or poorly stored hops."
+             data-fix="Limit dry hop contact time (2–4 days typical); use pellet hops; store hops cold and vacuum-sealed."
+             data-threshold="A fault when prominent. Low levels can be appropriate in very fresh hop-forward beers.">
+            <div class="style-id">Ingredients</div>
+            <div class="style-name">Grassy / Vegetal Hops</div>
+            <div class="flavor-descriptor">Cut grass, green plant, hay</div>
+        </div>
+
+        <div class="style-card" data-category="ingredients" data-search="catty ribes blackcurrant tomcat urine hop oxidation" onclick="openModal(this)"
+             data-name="Catty / Ribes"
+             data-descriptor="Blackcurrant, tomcat urine, ribes"
+             data-category-label="Ingredients"
+             data-cause="Oxidized hop compounds; specific hop varieties (some Cascade, Chinook); hop creep; over-dry-hopping."
+             data-fix="Minimize oxygen exposure; use fresh hops; be selective with hop varieties and quantities."
+             data-threshold="Always a fault in finished beer. Distinct from the pleasant fruity/berry character in some hop varieties.">
+            <div class="style-id">Ingredients</div>
+            <div class="style-name">Catty / Ribes</div>
+            <div class="flavor-descriptor">Blackcurrant, tomcat urine</div>
+        </div>
+
+        <!-- PACKAGING & STABILITY -->
+
+        <div class="style-card" data-category="packaging" data-search="oxidized cardboard papery sherry stale wet paper" onclick="openModal(this)"
+             data-name="Oxidation"
+             data-descriptor="Cardboard, papery, sherry-like, stale, wet paper"
+             data-category-label="Packaging &amp; Stability"
+             data-cause="Oxygen exposure during transfer, packaging, or storage; warm storage accelerates staling; poor bottle capping."
+             data-fix="Minimize splashing during transfers; purge vessels with CO2; store cold; use oxygen-absorbing caps; drink fresh."
+             data-threshold="Always a fault in fresh beers. Some oxidative character acceptable in intentionally aged styles (barleywines, old ales).">
+            <div class="style-id">Packaging &amp; Stability</div>
+            <div class="style-name">Oxidation</div>
+            <div class="flavor-descriptor">Cardboard, papery, sherry, stale</div>
+        </div>
+
+        <div class="style-card" data-category="packaging" data-search="sour acetic vinegar lactic acidic tartness bacteria lacto pedio" onclick="openModal(this)"
+             data-name="Acidity / Sourness"
+             data-descriptor="Vinegar (acetic), tart/lactic, sharp"
+             data-category-label="Packaging &amp; Stability"
+             data-cause="Bacterial contamination — Lactobacillus (lactic acid), Acetobacter (acetic acid/vinegar); wild yeast; poor sanitation; oxygen + alcohol."
+             data-fix="Strict sanitation; minimize oxygen exposure; avoid leaving beer warm for extended periods."
+             data-threshold="Intentional in sour styles (Berliner Weisse, Gose, lambic). Always a fault in non-sour styles.">
+            <div class="style-id">Packaging &amp; Stability</div>
+            <div class="style-name">Acidity / Sourness</div>
+            <div class="flavor-descriptor">Vinegar, tart, sharp</div>
+        </div>
+
+        <div class="style-card" data-category="packaging" data-search="musty moldy earthy damp basement geosmin TCA cork taint" onclick="openModal(this)"
+             data-name="Musty / Moldy"
+             data-descriptor="Damp basement, mold, earthy, cork taint (TCA)"
+             data-category-label="Packaging &amp; Stability"
+             data-cause="Contaminated equipment or ingredients; poor storage environment; cork taint from chlorine + mold producing TCA."
+             data-fix="Thorough cleaning of equipment; store ingredients properly; inspect for mold; avoid chlorine near corks."
+             data-threshold="Always a fault.">
+            <div class="style-id">Packaging &amp; Stability</div>
+            <div class="style-name">Musty / Moldy</div>
+            <div class="flavor-descriptor">Damp basement, mold, cork taint</div>
+        </div>
+
+        <div class="style-card" data-category="packaging" data-search="flat low carbonation undercarbonated priming sugar yeast" onclick="openModal(this)"
+             data-name="Under-carbonation"
+             data-descriptor="Flat, thin, lacks effervescence"
+             data-category-label="Packaging &amp; Stability"
+             data-cause="Insufficient priming sugar; yeast exhausted or dead at bottling; cold conditioning before priming complete; CO2 leaks."
+             data-fix="Ensure adequate priming sugar calculation; bottle with active yeast present; condition at room temperature."
+             data-threshold="A technical fault when outside style range. Affects perceived body and hop character.">
+            <div class="style-id">Packaging &amp; Stability</div>
+            <div class="style-name">Under-carbonation</div>
+            <div class="flavor-descriptor">Flat, thin, no effervescence</div>
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOnBackdrop(event)">
+        <div class="modal" id="modal">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-id" id="mCategory"></div>
+            <div class="modal-name" id="mName"></div>
+
+            <div class="modal-stats" id="mDescriptor"></div>
+
+            <div id="mBody"></div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(card) {
+            const d = card.dataset;
+            document.getElementById('mCategory').textContent = d.categoryLabel;
+            document.getElementById('mName').textContent = d.name;
+            document.getElementById('mDescriptor').innerHTML =
+                `<span class="modal-stat">${d.descriptor}</span>`;
+
+            document.getElementById('mBody').innerHTML = `
+                <div class="detail-section">
+                    <h4>Cause</h4>
+                    <p>${d.cause}</p>
+                </div>
+                <div class="detail-section">
+                    <h4>Fix</h4>
+                    <p>${d.fix}</p>
+                </div>
+                <div class="detail-section">
+                    <h4>When is it a fault?</h4>
+                    <p>${d.threshold}</p>
+                </div>`;
+
+            document.getElementById('modalBackdrop').classList.add('open');
+            document.getElementById('modal').scrollTop = 0;
+        }
+
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.remove('open');
+        }
+
+        function closeModalOnBackdrop(e) {
+            if (e.target === document.getElementById('modalBackdrop')) closeModal();
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        function filterCards() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const cat   = document.getElementById('categoryFilter').value;
+            const cards = document.querySelectorAll('.style-card');
+            let visible = 0;
+
+            cards.forEach(card => {
+                const matchQuery = !query || card.dataset.search.includes(query) ||
+                    card.dataset.name.toLowerCase().includes(query) ||
+                    card.dataset.descriptor.toLowerCase().includes(query);
+                const matchCat = !cat || card.dataset.category === cat;
+                const show = matchQuery && matchCat;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            document.getElementById('countLabel').textContent =
+                visible + ' off-flavor' + (visible !== 1 ? 's' : '');
+        }
+
+        filterCards();
+    </script>
+</body>
+</html>

@@ -598,8 +598,15 @@ select.filled-select {
 }
 
 /* ======================================================================
-   BJCP Style Guide
+   BJCP Style Guide & Off-Flavors (shared)
    ====================================================================== */
+
+.flavor-descriptor {
+    font-size: 13px;
+    color: #888;
+    margin-top: 6px;
+    font-style: italic;
+}
 
 .search-bar {
     display: flex;
