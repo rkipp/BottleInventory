@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BJCP Style Guide</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="center-group">
+            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
+            <h1>BJCP Style Guide</h1>
+        </div>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+        </nav>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search styles, categories, descriptions…" oninput="filterStyles()">
+        <select id="categoryFilter" onchange="filterStyles()">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="count-label" id="countLabel"></div>
+
+    <div class="style-grid" id="styleGrid">
+        {% for s in styles %}
+        {% set abv = s.get('alcohol_by_volume') %}
+        {% set ibu = s.get('international_bitterness_units') %}
+        {% set srm = s.get('color') %}
+        {% set og  = s.get('original_gravity') %}
+        <div class="style-card {% if s.style_id == highlight %}highlighted{% endif %}"
+             id="style-{{ s.style_id }}"
+             data-name="{{ s.name | lower }}"
+             data-category="{{ s.category }}"
+             data-desc="{{ s.overall_impression | lower }}"
+             data-tags="{{ s.tags | lower if s.tags else '' }}"
+             data-id="{{ s.style_id }}"
+             onclick="openModal(this)"
+
+             data-modal-id="{{ s.style_id }}"
+             data-modal-category="{{ s.category }}"
+             data-modal-name="{{ s.name }}"
+             data-modal-impression="{{ s.overall_impression }}"
+             data-modal-aroma="{{ s.aroma or '' }}"
+             data-modal-flavor="{{ s.flavor or '' }}"
+             data-modal-appearance="{{ s.appearance or '' }}"
+             data-modal-mouthfeel="{{ s.mouthfeel or '' }}"
+             data-modal-comments="{{ s.comments or '' }}"
+             data-modal-examples="{{ s.examples or '' }}"
+             data-modal-tags="{{ s.tags or '' }}"
+             data-modal-abv="{% if abv %}ABV {{ abv.minimum.value }}–{{ abv.maximum.value }}%{% endif %}"
+             data-modal-ibu="{% if ibu %}IBU {{ ibu.minimum.value }}–{{ ibu.maximum.value }}{% endif %}"
+             data-modal-srm="{% if srm %}SRM {{ srm.minimum.value }}–{{ srm.maximum.value }}{% endif %}"
+             data-modal-srm-min="{% if srm %}{{ srm.minimum.value }}{% endif %}"
+             data-modal-srm-max="{% if srm %}{{ srm.maximum.value }}{% endif %}"
+             data-modal-og="{% if og %}OG {{ og.minimum.value }}–{{ og.maximum.value }}{% endif %}"
+             data-modal-inventory="{{ 'true' if s.name in inventory_styles else 'false' }}"
+             >
+
+            <div class="style-id">{{ s.style_id }} · {{ s.category }}</div>
+            <div class="style-name">
+                {{ s.name }}
+                {% for beer in inventory_by_style.get(s.name, []) %}<span class="inventory-match">{{ beer.name }}</span>{% endfor %}
+            </div>
+
+            <div class="stats-row">
+                {% if abv %}<span class="stat-badge">ABV {{ abv.minimum.value }}–{{ abv.maximum.value }}%</span>{% endif %}
+                {% if ibu %}<span class="stat-badge">IBU {{ ibu.minimum.value }}–{{ ibu.maximum.value }}</span>{% endif %}
+                {% if srm %}
+                <span class="stat-badge" style="background:linear-gradient(to right, {{ srm_hex(srm.minimum.value) }}, {{ srm_hex(srm.maximum.value) }});color:white">
+                    SRM {{ srm.minimum.value }}–{{ srm.maximum.value }}
+                </span>
+                {% endif %}
+            </div>
+
+            <div class="style-impression">{{ s.overall_impression }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOnBackdrop(event)">
+        <div class="modal" id="modal">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-id" id="mId"></div>
+            <div class="modal-name" id="mName"></div>
+            <div class="modal-category" id="mCategory"></div>
+            <div class="modal-stats" id="mStats"></div>
+            <div id="mBeers"></div>
+            <div id="mBody"></div>
+            <div class="tags-row" id="mTags"></div>
+        </div>
+    </div>
+
+    <script>
+        const inventoryByStyle = {{ inventory_by_style | tojson }};
+    </script>
+    <script>
+        function openModal(card) {
+            const d = card.dataset;
+
+            document.getElementById('mId').textContent = d.modalId;
+            document.getElementById('mName').innerHTML = d.modalName +
+                (d.modalInventory === 'true' ? ' <span class="inventory-match">In your inventory</span>' : '');
+            document.getElementById('mCategory').textContent = d.modalCategory;
+
+            // Stats
+            const stats = [d.modalAbv, d.modalIbu, d.modalSrm, d.modalOg].filter(Boolean);
+            let statsHtml = stats.map(s => {
+                if (s.startsWith('SRM') && d.modalSrmMin) {
+                    const c1 = srmToHex(parseFloat(d.modalSrmMin));
+                    const c2 = srmToHex(parseFloat(d.modalSrmMax));
+                    return `<span class="modal-stat" style="background:linear-gradient(to right,${c1},${c2});color:white">${s}</span>`;
+                }
+                return `<span class="modal-stat">${s}</span>`;
+            }).join('');
+            document.getElementById('mStats').innerHTML = statsHtml;
+
+            // Your beers section
+            let beersHtml = '';
+            const beers = inventoryByStyle[d.modalName] || [];
+            if (beers.length > 0) {
+                beersHtml = `<div class="your-beers">
+                    <h4>Your beers in this style</h4>
+                    ${beers.map(b => `
+                        <div class="your-beer-row">
+                            <span>${b.name}</span>
+                            <span class="your-beer-count">${b.total} ${b.is_keg ? (b.total !== 1 ? 'kegs' : 'keg') : (b.total !== 1 ? 'bottles' : 'bottle')}</span>
+                        </div>`).join('')}
+                </div>`;
+            }
+            document.getElementById('mBeers').innerHTML = beersHtml;
+            const sections = [
+                ['Overall Impression', d.modalImpression],
+                ['Aroma',    d.modalAroma],
+                ['Flavor',   d.modalFlavor],
+                ['Appearance', d.modalAppearance],
+                ['Mouthfeel', d.modalMouthfeel],
+                ['Comments', d.modalComments],
+                ['Examples', d.modalExamples],
+            ];
+            document.getElementById('mBody').innerHTML = sections
+                .filter(([, text]) => text)
+                .map(([label, text]) => `
+                    <div class="detail-section">
+                        <h4>${label}</h4>
+                        <p class="${label === 'Examples' ? 'examples-list' : ''}">${text}</p>
+                    </div>`)
+                .join('');
+
+            // Tags
+            const tags = d.modalTags ? d.modalTags.split(', ').map(t => `<span class="tag">${t}</span>`).join('') : '';
+            document.getElementById('mTags').innerHTML = tags;
+            document.getElementById('mTags').style.display = tags ? 'flex' : 'none';
+
+            document.getElementById('modalBackdrop').classList.add('open');
+            document.getElementById('modal').scrollTop = 0;
+        }
+
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.remove('open');
+        }
+
+        function closeModalOnBackdrop(e) {
+            if (e.target === document.getElementById('modalBackdrop')) closeModal();
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        // Client-side SRM → hex (mirrors brewfather.py logic)
+        function srmToHex(srm) {
+            srm = Math.max(0, srm);
+            const r = Math.round(255 * Math.pow(0.9, srm * 0.3));
+            const g = Math.round(255 * Math.pow(0.9, srm * 0.6));
+            const b = Math.round(255 * Math.pow(0.9, srm * 1.2));
+            return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Set card border colour by midpoint SRM
+        document.querySelectorAll('.style-card').forEach(card => {
+            const min = parseFloat(card.dataset.modalSrmMin);
+            const max = parseFloat(card.dataset.modalSrmMax);
+            if (!isNaN(min)) {
+                card.style.borderLeftColor = srmToHex((min + max) / 2);
+            }
+        });
+
+        function filterStyles() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const cat   = document.getElementById('categoryFilter').value;
+            const cards = document.querySelectorAll('.style-card');
+            let visible = 0;
+
+            cards.forEach(card => {
+                const matchQuery = !query ||
+                    card.dataset.name.includes(query) ||
+                    card.dataset.desc.includes(query) ||
+                    card.dataset.tags.includes(query) ||
+                    card.dataset.category.toLowerCase().includes(query);
+                const matchCat = !cat || card.dataset.category === cat;
+                const show = matchQuery && matchCat;
+                card.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+
+            document.getElementById('countLabel').textContent =
+                visible + ' style' + (visible !== 1 ? 's' : '');
+        }
+
+        // Handle deep-link from inventory (?style=American+IPA)
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('style');
+        if (target) {
+            document.getElementById('search').value = target;
+            filterStyles();
+            const highlighted = document.querySelector('.highlighted');
+            if (highlighted) {
+                highlighted.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => openModal(highlighted), 400);
+            }
+        }
+
+        filterStyles();
+    </script>
+</body>
+</html>

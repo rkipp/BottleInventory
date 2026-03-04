@@ -130,6 +130,54 @@ def index():
     )
 
 
+# ----------------------------------------------------------------------
+# BJCP Style Guide
+# ----------------------------------------------------------------------
+
+@app.route("/bjcp")
+def bjcp():
+    """Display the BJCP style guide with search, filtering, and inventory cross-reference.
+
+    Optional query param:
+        style — style_id to highlight and scroll to on load (e.g. ?style=14B)
+    """
+    import json
+
+    with open('./Data/bjcp_styleguide-2021.json') as f:
+        styles = json.load(f)['beerjson']['styles']
+
+    categories = sorted(set(s['category'] for s in styles))
+
+    highlight = request.args.get('style', '')
+
+    # Map style name → list of beer names with bottle counts for the modal
+    inventory_by_style = {}
+    for item in inv.group_inventory():
+        info = brewfather.get_batches().filter(
+            __import__('polars').col('name') == item['name']
+        ).to_dicts()
+        style = info[0].get('style') if info else None
+        if style:
+            if style not in inventory_by_style:
+                inventory_by_style[style] = []
+            total = sum(b['qty'] for b in item['bottles'])
+            is_keg = all(b['size'] == 320 for b in item['bottles'])
+            inventory_by_style[style].append({'name': item['name'], 'total': total, 'is_keg': is_keg})
+
+    # Cross-reference with current inventory styles for "In your inventory" badge
+    inventory_styles = set(inventory_by_style.keys())
+
+    return render_template(
+        "bjcp.html",
+        styles=styles,
+        categories=categories,
+        inventory_styles=inventory_styles,
+        inventory_by_style=inventory_by_style,
+        highlight=highlight,
+        srm_hex=brewfather.srm_to_hex,
+    )
+
+
 if __name__ == "__main__":
     brewfather.update_batches()
     app.run(debug=True, port=8085)
