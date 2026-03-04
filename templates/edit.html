@@ -1,40 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        nav a {
+            color: var(--background-color);
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: rgba(255,255,255,0.15);
+            transition: background-color 0.2s;
+        }
+        nav a:hover { background-color: var(--accent-color); }
+        nav { display: flex; gap: 8px; align-items: center; }
+
+        .delete-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .delete-btn:hover { opacity: 0.8; }
+
+        .add-row-wrapper {
+            text-align: center;
+            margin-top: 12px;
+        }
+        .add-row-btn {
+            background-color: var(--accent-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-row-btn:hover { opacity: 0.85; }
+
+        .save-wrapper {
+            text-align: center;
+            margin-top: 20px;
+            position: sticky;
+            bottom: 20px;
+        }
+        .save-btn {
+            background-color: var(--tertiary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .save-btn:hover { opacity: 0.85; }
+
+        select.filled-select {
+            font-size: 14px;
+            width: 100%;
+            padding: 6px;
+            background-color: var(--secondary-color);
+            color: var(--tertiary-color);
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
     <title>Edit Inventory</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2 style="text-align:center;">Edit Bottle Inventory</h2>
+    <header>
+        <div class="center-group">
+            <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
+            <h1>Edit Inventory</h1>
+        </div>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+        </nav>
+    </header>
 
-    <form method="POST">
-        <table>
+    <form method="POST" id="editForm">
+        <table id="inventoryTable">
             <thead>
                 <tr>
                     <th>Bottle Size (oz)</th>
                     <th>Quantity</th>
                     <th>Filled With</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
                 {% for row in inventory %}
                 <tr>
+                    <td><input type="number" name="BottleSize" value="{{ row.BottleSize }}"></td>
+                    <td><input type="number" name="Quantity" value="{{ row.Quantity }}"></td>
                     <td>
-                        <input type="number" name="BottleSize" value="{{ row.BottleSize }}">
+                        <select name="FilledWith" class="filled-select">
+                            <option value="Empty" {% if row.FilledWith == 'Empty' or not row.FilledWith %}selected{% endif %}>Empty</option>
+                            {% for batch in batches %}
+                            <option value="{{ batch }}" {% if row.FilledWith == batch %}selected{% endif %}>{{ batch }}</option>
+                            {% endfor %}
+                        </select>
                     </td>
-                    <td>
-                        <input type="number" name="Quantity" value="{{ row.Quantity }}">
-                    </td>
-                    <td>
-                        <input type="text" name="FilledWith" value="{{ row.FilledWith }}">
-                    </td>
+                    <td><button type="button" class="delete-btn" onclick="deleteRow(this)">&#x2715;</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <div style="text-align:center;">
-            <button type="submit">Save Changes</button>
+
+        <div class="add-row-wrapper">
+            <button type="button" class="add-row-btn" onclick="addRow()">+ Add Row</button>
+        </div>
+
+        <div class="save-wrapper">
+            <button type="submit" class="save-btn">Save Changes</button>
         </div>
     </form>
+
+    <script>
+        const batches = {{ batches | tojson }};
+
+        function buildSelect(selectedValue) {
+            let options = `<option value="Empty" ${!selectedValue || selectedValue === 'Empty' ? 'selected' : ''}>Empty</option>`;
+            batches.forEach(b => {
+                options += `<option value="${b}" ${selectedValue === b ? 'selected' : ''}>${b}</option>`;
+            });
+            return `<select name="FilledWith" class="filled-select">${options}</select>`;
+        }
+
+        function addRow() {
+            const tbody = document.getElementById('tableBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="number" name="BottleSize" value="12"></td>
+                <td><input type="number" name="Quantity" value="1"></td>
+                <td>${buildSelect('')}</td>
+                <td><button type="button" class="delete-btn" onclick="deleteRow(this)">&#x2715;</button></td>
+            `;
+            tbody.appendChild(tr);
+            markDirty();
+        }
+
+        function deleteRow(btn) {
+            btn.closest('tr').remove();
+            markDirty();
+        }
+
+        // Unsaved changes warning
+        let isDirty = false;
+        function markDirty() { isDirty = true; }
+
+        document.getElementById('editForm').addEventListener('input', markDirty);
+        document.getElementById('editForm').addEventListener('submit', () => { isDirty = false; });
+
+        window.addEventListener('beforeunload', (e) => {
+            if (isDirty) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Nav links should also respect unsaved changes
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (isDirty && !confirm('You have unsaved changes. Leave anyway?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

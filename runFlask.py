@@ -9,7 +9,6 @@ inv = Inventory()  # Load inventory from CSV
 def edit_inventory():
     inv = Inventory()
     if request.method == "POST":
-        # Collect parallel lists of inputs
         sizes = request.form.getlist("BottleSize")
         quantities = request.form.getlist("Quantity")
         filleds = request.form.getlist("FilledWith")
@@ -25,29 +24,20 @@ def edit_inventory():
         inv.replace_inventory(new_data)
         return redirect(url_for("edit_inventory"))
 
-    return render_template("edit.html", inventory=inv.get_inventory())
-
-@app.route("/view")
-def view():
-    inventory = inv.inventory  # Get current inventory
-    return render_template("viewOnly.html", inventory=inventory)
-
-@app.route("/group")
-def view_grouped():
-    return render_template("grouped.html", inventory=inv.group_inventory())
+    batches = brewfather.get_batches()["name"].to_list()
+    return render_template("edit.html", inventory=inv.get_inventory(), batches=batches)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         print(request.form)
-        action = request.form["action"]  # Check which button was clicked
+        action = request.form["action"]
 
         if action == "update":
-            brewfather.update_batches()
-            active_names = brewfather.get_batches()["name"].to_list() + brewfather.get_whats_fermenting()["name"].to_list()
-            inv.auto_empty_archived(active_names)
+            archived_names = brewfather.update_batches()
+            inv.auto_empty_archived(archived_names)
             return redirect(url_for("index"))
-        
+
         size = int(request.form["bottle_size"])
         quantity = int(request.form["quantity"])
         filled_with = request.form["filled_with"]
@@ -61,13 +51,13 @@ def index():
         elif action == "empty":
             inv.empty_bottles(size, quantity, filled_with)
         elif action == "remove":
-            inv.remove_bottles(size, quantity, filled_with)        
+            inv.remove_bottles(size, quantity, filled_with)
 
-        return redirect(url_for("index"))  # Refresh the page
+        return redirect(url_for("index"))
 
-    inventory = inv.group_inventory()  # Get current inventory
-    batches = brewfather.get_batches()["name"].to_list()  # Get batches from Brewfather
-    fermenting = brewfather.get_whats_fermenting()["name"].to_list()  # Get fermenting batches
+    inventory = inv.group_inventory()
+    batches = brewfather.get_batches()["name"].to_list()
+    fermenting = brewfather.get_whats_fermenting()["name"].to_list()
     if len(fermenting) == 0:
         fermenting = False
     return render_template("index.html", inventory=inventory, batches=batches, fermenting=fermenting, empty_capacity=inv.calculate_empty_capacity())
