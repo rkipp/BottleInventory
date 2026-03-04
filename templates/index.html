@@ -19,14 +19,19 @@
         nav { display: flex; gap: 8px; align-items: center; }
 
         .pill {
-            display: block;
+            display: inline-flex;
+            align-items: center;
             background-color: var(--accent-color);
             color: var(--background-color);
             border-radius: 20px;
-            padding: 3px 10px;
-            margin: 2px auto;
+            padding: 3px 6px 3px 10px;
+            margin: 2px 0;
             font-size: 13px;
             white-space: nowrap;
+        }
+        .pill-text {
+            flex: 1;
+            text-align: center;
         }
         .bottling-helper {
             background-color: var(--accent-color);
@@ -136,6 +141,21 @@
                 font-size: 16px; /* prevent iOS zoom on focus */
             }
         }
+        .pill-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: var(--background-color);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 1px 5px;
+            line-height: 1;
+            border-radius: 20px;
+            flex-shrink: 0;
+            width: auto;
+        }
+        .pill-btn:hover { background: rgba(255,255,255,0.3); }
+        .pill form { display: contents; margin: 0; width: auto; }
+        .pill form input[type="hidden"] { width: auto; padding: 0; margin: 0; }
         .total-oz {
             font-size: 12px;
             opacity: 0.65;
@@ -194,7 +214,7 @@
         }
     </style>
 </head>
-<body align="center">    
+<body>
     <header>
         <div class="center-group">
             <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
@@ -203,17 +223,14 @@
         <nav>
             <a href="{{ url_for('edit_inventory') }}">Edit</a>
         </nav>
-        <form method="post">
-            <button type="submit" name="action" value="update">Update Batches</button>
-        </form>
     </header>
     <div class="layout-wrapper">
         <div class="left-column">
-        <table style="table-layout: fixed;">
+            <table style="table-layout: fixed;">
             <colgroup>
                 <col style="width: 40px;">
-                <col style="width: 55%;">
-                <col style="width: auto;">
+                <col>
+                <col style="width: 40%;">
             </colgroup>
             <thead>
                 <tr>
@@ -243,17 +260,19 @@
                     <div class="total-oz">{{ (item.total_oz / 128) | round(2) }} gal</div>
                 </td>
                 <td>
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
                     {% for b in item.bottles %}
-                    <span class="pill">{{ b.qty }} &times; {{ b.size }}oz</span>
+                    <span class="pill"><span class="pill-text">{{ b.qty }} &times; {{ b.size }}oz</span><form method="post"><input type="hidden" name="bottle_size" value="{{ b.size }}"><input type="hidden" name="quantity" value="1"><input type="hidden" name="filled_with" value="{{ item.name }}"><button type="submit" name="action" value="empty" class="pill-btn" title="Empty one">−</button></form></span>
                     {% endfor %}
+                    </div>
                 </td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
         
-        <h2 align="center">Update Inventory</h2>
-        <form method="post" width="100%">
+            <h2 style="text-align:center;">Update Inventory</h2>
+            <form method="post">
             <label for="bottle_size">Choose a Bottle Size:</label>
                 <select name="bottle_size" id="bottle_size">
                     <option value="Please Choose">Please Choose</option>
@@ -304,7 +323,7 @@
     </div>
     <div class="right-column">
         {% if fermenting %}
-        <div class="fermenter-container" align="center">
+        <div class="fermenter-container">
             <p>Fermenting</p>
             {% for beer in fermenting %}
             <div class="fermenter">
@@ -322,7 +341,7 @@
                 <h3>Bottling Helper</h3>
                 <label for="bh-volume">Batch volume (gallons)</label>
                 <input type="number" id="bh-volume" step="0.1" min="0" placeholder="e.g. 5.5">
-<button onclick="calcBottling()">Calculate</button>
+                <button onclick="calcBottling()">Calculate</button>
                 <div class="bottling-result" id="bh-result"></div>
         </div>
     </div>
@@ -371,9 +390,11 @@ function calcBottling() {
 }
 </script>
 
-<div>
-    <h2 align="center">Empty Capacity</h2>
-    <p align="center">{{ empty_capacity }} gal</p>
+<div style="text-align:center; margin-top: 20px; opacity: 0.6;">
+    <p style="margin-bottom: 6px;">Empty capacity: {{ empty_capacity }} gal</p>
+    <form method="post" style="display:inline;">
+        <button type="submit" name="action" value="update" style="font-size:12px; padding: 4px 14px; background-color: var(--background-color); color: var(--tertiary-color); border: 1px solid var(--tertiary-color);">Update Batches</button>
+    </form>
 </div>
     
 </body>
