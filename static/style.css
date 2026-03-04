@@ -1,10 +1,11 @@
-
 :root {
   --primary-color: #ff6d4d;
   --secondary-color: #ffdd78;
   --accent-color: #025a3c;
   --background-color: #ece4ff;
-  --tertiary-color: #5170ff 
+  --tertiary-color: #5170ff;
+  --table-cell-color: #d4edda;
+  --table-header-color: #025a3c 
 }
 
 *{
@@ -67,7 +68,7 @@ body {
 
 table {
   width: 100%;
-  background-color: var(--secondary-color);
+  background-color: var(--table-cell-color);
   margin: auto;
   padding: 10px;
   color: var(--tertiary-color);
@@ -83,13 +84,13 @@ th, td {
   border: none;
   padding: 8px;
   text-align: center;
-  background-color: var(--secondary-color);
+  background-color: var(--table-cell-color);
   border-radius: 0px;
 }
 
 th {
-  background-color: var(--tertiary-color);
-  color: var(--secondary-color);
+  background-color: var(--table-header-color);
+  color: #ffffff;
   border-radius: 0;
   font-size: 18px;
 }
@@ -329,5 +330,3 @@ form select, option{
         margin: 0 auto; /* Remove top margin on mobile */
     }
 }
-
-

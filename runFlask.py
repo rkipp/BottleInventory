@@ -5,6 +5,7 @@ import brewfather
 app = Flask(__name__)
 inv = Inventory()  # Load inventory from CSV
 
+
 @app.route("/edit", methods=["GET", "POST"])
 def edit_inventory():
     inv = Inventory()
@@ -56,11 +57,37 @@ def index():
         return redirect(url_for("index"))
 
     inventory = inv.group_inventory()
-    batches = brewfather.get_batches()["name"].to_list()
-    fermenting = brewfather.get_whats_fermenting()["name"].to_list()
-    if len(fermenting) == 0:
-        fermenting = False
-    return render_template("index.html", inventory=inventory, batches=batches, fermenting=fermenting, empty_capacity=inv.calculate_empty_capacity())
+    batches_df = brewfather.get_batches()
+    batches = batches_df["name"].to_list()
+    batch_info = {
+        row["name"]: {
+            "abv": row["measuredAbv"],
+            "style": row["style"],
+            "color": brewfather.srm_to_hex(row.get("estimatedColor"))
+        }
+        for row in batches_df.to_dicts()
+    }
+
+    fermenting_df = brewfather.get_whats_fermenting()
+    fermenting_list = [
+        {"name": row["name"], "color": brewfather.srm_to_hex(row.get("estimatedColor"))}
+        for row in fermenting_df.to_dicts()
+    ]
+    fermenting = fermenting_list if fermenting_list else False
+
+    all_inventory = inv.get_inventory()
+    # All distinct bottle sizes owned
+    all_bottle_sizes = sorted(set(item["BottleSize"] for item in all_inventory if item["BottleSize"] != 320), reverse=True)
+    # Empty count per size
+    empty_by_size = {}
+    for item in all_inventory:
+        if item["FilledWith"] == "Empty":
+            empty_by_size[item["BottleSize"]] = empty_by_size.get(item["BottleSize"], 0) + item["Quantity"]
+    return render_template("index.html", inventory=inventory, batches=batches,
+                           batch_info=batch_info, fermenting=fermenting,
+                           empty_capacity=inv.calculate_empty_capacity(),
+                           all_bottle_sizes=all_bottle_sizes,
+                           empty_by_size=empty_by_size)
 
 if __name__ == "__main__":
     brewfather.update_batches()
