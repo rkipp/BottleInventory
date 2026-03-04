@@ -1,11 +1,11 @@
-batchNo,brewDate,brewer,name,status
-57,2026-02-17,Ryan K,"""Not Chicken""",Conditioning
-56,2026-02-01,Ryan K,Running River,Conditioning
-55,2026-02-01,Ryan K,Table 6,Completed
-54,2026-01-10,Ryan K,Daily Dubbel,Completed
-51,2025-11-15,Ryan K,Darth Wheat,Completed
-46,2025-09-09,Ryan K,Bees knees,Completed
-45,2025-09-09,Ryan K,White Lightning,Completed
-40,2025-07-06,Ryan K,Ghost barrel,Completed
-39,2025-07-01,Ryan K,Table 4,Completed
-31,2025-04-05,Ryan K,Table three,Completed
+batchNo,brewDate,name,status,measuredAbv,style,estimatedColor
+57,2026-02-17,"""Not Chicken""",Conditioning,5.5,Saison,4.5
+56,2026-02-01,Running River,Conditioning,6.0,American IPA,3.6
+55,2026-02-01,Table 6,Completed,2.8,Table Saison,2.9
+54,2026-01-10,Daily Dubbel,Completed,6.5,Belgian Dubbel,16.7
+51,2025-11-15,Darth Wheat,Completed,8.7,Weizenbock,20.8
+46,2025-09-09,Bees knees,Completed,6.8,Experimental Cider,5.4
+45,2025-09-09,White Lightning,Completed,7.4,Experimental Cider,7.3
+40,2025-07-06,Ghost barrel,Completed,10.2,Imperial Stout,29.6
+39,2025-07-01,Table 4,Completed,2.9,Table Saison,3.3
+31,2025-04-05,Table three,Completed,3.5,Table Saison,3.9
