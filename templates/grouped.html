@@ -5,10 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        table {
-            width: 50%;
-            margin: auto;
+        table { width: 50%; margin: auto; }
+        .pill {
+            display: block;
+            background-color: var(--accent-color);
+            color: var(--background-color);
+            border-radius: 20px;
+            padding: 3px 10px;
+            margin: 2px auto;
+            font-size: 13px;
+            white-space: nowrap;
         }
+        .total-oz { font-size: 12px; opacity: 0.65; margin-top: 3px; }
     </style>
     <title>Inventory</title>
 </head>
@@ -18,21 +26,28 @@
         <h1>Grouped Inventory</h1>
     </header>
     <h1 align="center">Beer Bottle Inventory</h1>
-    <table border="1" style="width: 50%" align="center" background-color="brown">
-        <tr>
-            <th>Filled With</th>
-            <th>Bottles</th>
-        </tr>
+    <table>
+        <thead>
+            <tr>
+                <th>Beer</th>
+                <th>Bottles</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for item in inventory %}
         <tr>
-            <td>{{ item }}</td>
             <td>
-                {% for x in inventory[item] %}
-                  {{ x[0] }}-{{ x[1] }}{% if not loop.last %}, {% endif %}
+                {{ item.name }}
+                <div class="total-oz">{{ (item.total_oz / 128) | round(2) }} gal</div>
+            </td>
+            <td>
+                {% for b in item.bottles %}
+                <span class="pill">{{ b.qty }} &times; {{ b.size }}oz</span>
                 {% endfor %}
-              </td>
+            </td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
     <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;" class="footer-link">
         <a href="{{ url_for('index') }}">Edit</a>

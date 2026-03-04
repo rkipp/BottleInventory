@@ -44,7 +44,9 @@ def index():
 
         if action == "update":
             brewfather.update_batches()
-            return redirect(url_for("index"))  # Refresh the page
+            active_names = brewfather.get_batches()["name"].to_list() + brewfather.get_whats_fermenting()["name"].to_list()
+            inv.auto_empty_archived(active_names)
+            return redirect(url_for("index"))
         
         size = int(request.form["bottle_size"])
         quantity = int(request.form["quantity"])
@@ -72,4 +74,4 @@ def index():
 
 if __name__ == "__main__":
     brewfather.update_batches()
-    app.run(debug=False)
+    app.run(debug=True, port=8085)

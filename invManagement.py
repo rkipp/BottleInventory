@@ -21,21 +21,25 @@ class Inventory:
             return []  # Return empty inventory if file doesn't exist
 
     def group_inventory(self):
-        """Groups the inventory by filled content."""
+        """Groups the inventory by filled content, sorted by total oz descending."""
         try:
             with open(self.filename, mode='r') as file:
                 reader = csv.DictReader(file)
-                grouped_inventory = {}
+                grouped = {}
                 for row in reader:
                     if row['FilledWith'] in ['None', 'Empty']:
                         continue
                     filled_with = row['FilledWith']
-                    if filled_with not in grouped_inventory:
-                        grouped_inventory[filled_with] = []
-                    grouped_inventory[filled_with].append((row['Quantity'], row['BottleSize']+'oz'))
-                return grouped_inventory
+                    qty = int(row['Quantity'])
+                    size = int(row['BottleSize'])
+                    if filled_with not in grouped:
+                        grouped[filled_with] = {'bottles': [], 'total_oz': 0}
+                    grouped[filled_with]['bottles'].append({'qty': qty, 'size': size})
+                    grouped[filled_with]['total_oz'] += qty * size
+                sorted_inventory = sorted(grouped.items(), key=lambda x: x[1]['total_oz'], reverse=True)
+                return [{'name': name, 'bottles': data['bottles'], 'total_oz': data['total_oz']} for name, data in sorted_inventory]
         except FileNotFoundError:
-            return {}
+            return []
 
     def save_inventory(self):
         """Saves the inventory list to a CSV file."""

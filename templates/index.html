@@ -5,6 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        nav a {
+            color: var(--background-color);
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: rgba(255,255,255,0.15);
+            transition: background-color 0.2s;
+        }
+        nav a:hover {
+            background-color: var(--accent-color);
+        }
+        nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .pill {
+            display: block;
+            background-color: var(--accent-color);
+            color: var(--background-color);
+            border-radius: 20px;
+            padding: 3px 10px;
+            margin: 2px auto;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .total-oz {
+            font-size: 12px;
+            opacity: 0.65;
+            margin-top: 3px;
+        }
+    </style>
 </head>
 <body align="center">    
     <header>
@@ -12,25 +46,40 @@
             <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="logo">
             <h1>Inventory</h1>
         </div>
-        <button type="submit" name="action" value="update">Update Batches</button>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('view') }}">View</a>
+            <a href="{{ url_for('view_grouped') }}">Grouped</a>
+            <a href="{{ url_for('edit_inventory') }}">Edit</a>
+        </nav>
+        <form method="post">
+            <button type="submit" name="action" value="update">Update Batches</button>
+        </form>
     </header>
     <div class="layout-wrapper">
         <div class="left-column">
         <table>
-            <tr>
-                <th>Filled With</th>
-                <th>Bottles</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Beer</th>
+                    <th>Bottles</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for item in inventory %}
             <tr>
-                <td>{{ item }}</td>
                 <td>
-                    {% for x in inventory[item] %}
-                    {{ x[0] }} | {{ x[1] }}{% if not loop.last %}<br>{% endif %}
+                    {{ item.name }}
+                    <div class="total-oz">{{ (item.total_oz / 128) | round(2) }} gal</div>
+                </td>
+                <td>
+                    {% for b in item.bottles %}
+                    <span class="pill">{{ b.qty }} &times; {{ b.size }}oz</span>
                     {% endfor %}
                 </td>
             </tr>
             {% endfor %}
+            </tbody>
         </table>
         
         <h2 align="center">Update Inventory</h2>
@@ -74,26 +123,20 @@
             }
             </script>
                 
-                
             <div class="button-container">
                 <button type="submit" name="action" value="add">Add</button>
                 <button type="submit" name="action" value="fill">Fill</button>
                 <button type="submit" name="action" value="empty">Empty</button>
                 <button type="submit" name="action" value="remove">Remove</button>
             </div>
-
-            
         </form>
-
 
     </div>
     {% if fermenting %}
     <div class="fermenter-container" align="center">
-        
-        <body>Coming soon</body>
+        <p>Fermenting</p>
         {% for beer in fermenting %}
         <div class="fermenter">
-
           <div class="fermenter-body">
             <div class="fermenter-label">{{ beer }}</div>
           </div>
@@ -101,7 +144,6 @@
           <div class="fermenter-base"></div>
         </div>
         {% endfor %}
-        
     </div>
     {% endif %}
 </div>

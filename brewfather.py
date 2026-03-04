@@ -10,7 +10,7 @@ lbs_p_kilo = (1/2.20462)
 
 def update_batches():
     auth = HTTPBasicAuth(userid, apikey)
-    raw_batches = pl.DataFrame(requests.get('https://api.brewfather.app/v2/batches?limit=50&order_by=batchNo', auth=auth).json())
+    raw_batches = pl.DataFrame(requests.get('https://api.brewfather.app/v2/batches?limit=50&order_by=batchNo&order_by_direction=desc', auth=auth).json())
     
     batches = (raw_batches
                .with_columns(pl.from_epoch('brewDate', time_unit='ms').dt.date(), pl.col('recipe').struct.unnest())
