@@ -1,16 +1,57 @@
-from flask import Flask, render_template, request, redirect, url_for
+import os
+from functools import wraps
+from flask import Flask, render_template, request, redirect, url_for, session
 from invManagement import Inventory
 import brewfather
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "change-this-in-production")
+
 inv = Inventory()
+
+# Password is set via environment variable ADMIN_PASSWORD
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "changeme")
 
 
 # ----------------------------------------------------------------------
-# Edit page — bulk inventory management
+# Auth helpers
+# ----------------------------------------------------------------------
+
+def login_required(f):
+    """Decorator that redirects to login if the user is not authenticated."""
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login", next=request.url))
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Simple single-password login page."""
+    error = None
+    if request.method == "POST":
+        if request.form.get("password") == ADMIN_PASSWORD:
+            session["logged_in"] = True
+            next_url = request.args.get("next") or url_for("index")
+            return redirect(next_url)
+        error = "Incorrect password."
+    return render_template("login.html", error=error)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
+
+
+# ----------------------------------------------------------------------
+# Edit page — bulk inventory management (protected)
 # ----------------------------------------------------------------------
 
 @app.route("/edit", methods=["GET", "POST"])
+@login_required
 def edit_inventory():
     """Display and handle the bulk inventory edit table.
 
@@ -43,18 +84,16 @@ def edit_inventory():
 def index():
     """Home page showing grouped inventory, fermenter status, and bottling helper.
 
-    POST actions:
-        update — sync Brewfather batches and auto-empty archived bottles.
-        add    — add new bottles (empty or filled).
-        fill   — mark empty bottles as filled with a specific beer.
-        empty  — mark filled bottles as empty.
-        remove — remove bottles from inventory entirely.
+    GET:  Public — anyone can view.
+    POST: Protected — requires login. Actions: update, add, fill, empty, remove.
     """
     if request.method == "POST":
+        if not session.get("logged_in"):
+            return redirect(url_for("login", next=url_for("index")))
+
         action = request.form["action"]
 
         if action == "update":
-            # Read active names before updating so we have the pre-update state
             active_names = (
                 brewfather.get_batches()["name"].to_list()
                 + brewfather.get_whats_fermenting()["name"].to_list()
@@ -87,7 +126,6 @@ def index():
     batches_df  = brewfather.get_batches()
     batches     = batches_df["name"].to_list()
 
-    # Per-beer display info (ABV, style, SRM colour)
     batch_info = {
         row["name"]: {
             "abv":   row["measuredAbv"],
@@ -97,7 +135,6 @@ def index():
         for row in batches_df.to_dicts()
     }
 
-    # Fermenting vessels for the right-column display
     fermenting_df   = brewfather.get_whats_fermenting()
     fermenting_list = [
         {"name": row["name"], "color": brewfather.srm_to_hex(row.get("estimatedColor"))}
@@ -105,7 +142,6 @@ def index():
     ]
     fermenting = fermenting_list if fermenting_list else False
 
-    # Bottling helper data: all owned sizes (excl. kegs) and empty counts per size
     all_inventory    = inv.get_inventory()
     all_bottle_sizes = sorted(
         {item["BottleSize"] for item in all_inventory if item["BottleSize"] != 320},
@@ -127,6 +163,7 @@ def index():
         empty_capacity=inv.calculate_empty_capacity(),
         all_bottle_sizes=all_bottle_sizes,
         empty_by_size=empty_by_size,
+        logged_in=session.get("logged_in", False),
     )
 
 
@@ -136,21 +173,15 @@ def index():
 
 @app.route("/bjcp")
 def bjcp():
-    """Display the BJCP style guide with search, filtering, and inventory cross-reference.
-
-    Optional query param:
-        style — style_id to highlight and scroll to on load (e.g. ?style=14B)
-    """
+    """Display the BJCP style guide with search, filtering, and inventory cross-reference."""
     import json
 
     with open('./Data/bjcp_styleguide-2021.json') as f:
         styles = json.load(f)['beerjson']['styles']
 
     categories = sorted(set(s['category'] for s in styles))
+    highlight  = request.args.get('style', '')
 
-    highlight = request.args.get('style', '')
-
-    # Map style name → list of beer names with bottle counts for the modal
     inventory_by_style = {}
     for item in inv.group_inventory():
         info = brewfather.get_batches().filter(
@@ -160,11 +191,10 @@ def bjcp():
         if style:
             if style not in inventory_by_style:
                 inventory_by_style[style] = []
-            total = sum(b['qty'] for b in item['bottles'])
+            total  = sum(b['qty'] for b in item['bottles'])
             is_keg = all(b['size'] == 320 for b in item['bottles'])
             inventory_by_style[style].append({'name': item['name'], 'total': total, 'is_keg': is_keg})
 
-    # Cross-reference with current inventory styles for "In your inventory" badge
     inventory_styles = set(inventory_by_style.keys())
 
     return render_template(
@@ -177,6 +207,10 @@ def bjcp():
         srm_hex=brewfather.srm_to_hex,
     )
 
+
+# ----------------------------------------------------------------------
+# Off-Flavors Reference
+# ----------------------------------------------------------------------
 
 @app.route("/offflavors")
 def offflavors():

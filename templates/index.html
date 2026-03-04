@@ -13,8 +13,13 @@
             <h1>Inventory</h1>
         </div>
         <nav>
-            <a href="{{ url_for('edit_inventory') }}">Edit</a>
             <a href="{{ url_for('bjcp') }}">Style Guide</a>
+            {% if logged_in %}
+            <a href="{{ url_for('edit_inventory') }}">Edit</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
         </nav>
     </header>
     <div class="layout-wrapper">
@@ -55,7 +60,7 @@
                 <td>
                     <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
                     {% for b in item.bottles %}
-                    <span class="pill"><span class="pill-text">{{ b.qty }} &times; {% if b.size == 320 %}keg{% else %}{{ b.size }}oz{% endif %}</span><form method="post"><input type="hidden" name="bottle_size" value="{{ b.size }}"><input type="hidden" name="quantity" value="1"><input type="hidden" name="filled_with" value="{{ item.name }}"><button type="submit" name="action" value="empty" class="pill-btn" title="Empty one">−</button></form></span>
+                    <span class="pill"><span class="pill-text">{{ b.qty }} &times; {% if b.size == 320 %}keg{% else %}{{ b.size }}oz{% endif %}</span>{% if logged_in %}<form method="post"><input type="hidden" name="bottle_size" value="{{ b.size }}"><input type="hidden" name="quantity" value="1"><input type="hidden" name="filled_with" value="{{ item.name }}"><button type="submit" name="action" value="empty" class="pill-btn" title="Empty one">−</button></form>{% endif %}</span>
                     {% endfor %}
                     </div>
                 </td>
@@ -64,6 +69,7 @@
             </tbody>
         </table>
         
+        {% if logged_in %}
             <h2 style="text-align:center;">Update Inventory</h2>
             <form method="post">
             <label for="bottle_size">Choose a Bottle Size:</label>
@@ -112,6 +118,7 @@
                 <button type="submit" name="action" value="remove">Remove</button>
             </div>
         </form>
+        {% endif %}
 
     </div>
     <div class="right-column">
@@ -186,9 +193,11 @@ function calcBottling() {
 
 <div style="text-align:center; margin-top: 20px; opacity: 0.6;">
     <p style="margin-bottom: 6px;">Empty capacity: {{ empty_capacity }} gal</p>
+    {% if logged_in %}
     <form method="post" style="display:inline;">
         <button type="submit" name="action" value="update" style="font-size:12px; padding: 4px 14px; background-color: var(--background-color); color: var(--tertiary-color); border: 1px solid var(--tertiary-color);">Update Batches</button>
     </form>
+    {% endif %}
 </div>
     
 </body>
