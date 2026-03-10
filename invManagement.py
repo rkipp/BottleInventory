@@ -134,25 +134,6 @@ class Inventory:
         self.remove_bottles(bottle_size, quantity, filled_with=filled_with)
         self.add_bottles(bottle_size, quantity, filled_with='Empty')
 
-    def auto_empty_archived(self, active_names):
-        """Empty all bottles filled with beers not in active_names.
-
-        Called after syncing with Brewfather to automatically clear out
-        bottles belonging to archived/deleted batches.
-
-        Args:
-            active_names: list of batch names that are still active.
-        """
-        active_set = set(active_names)
-        to_empty = [
-            (item['BottleSize'], item['Quantity'], item['FilledWith'])
-            for item in self.inventory
-            if item['FilledWith'] not in (active_set | {'Empty', None})
-        ]
-        for bottle_size, quantity, filled_with in to_empty:
-            self.empty_bottles(bottle_size, quantity, filled_with=filled_with)
-        return to_empty
-
     # ------------------------------------------------------------------
     # Bulk / direct edits (used by the Edit page)
     # ------------------------------------------------------------------

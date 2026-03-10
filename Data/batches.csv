@@ -1,11 +1,13 @@
 batchNo,brewDate,name,status,measuredAbv,style,estimatedColor
+58,2026-03-03,Tuesday Beer,Conditioning,3.4,Dark Mild,16.7
 57,2026-02-17,"""Not Chicken""",Conditioning,5.5,Saison,4.5
-56,2026-02-01,Running River,Conditioning,6.0,American IPA,3.6
-55,2026-02-01,Table 6,Completed,2.8,Table Saison,2.9
+56,2026-02-01,Running River,Completed,6.0,Specialty IPA,3.6
+55,2026-02-01,Table 6,Completed,2.8,Saison,2.9
 54,2026-01-10,Daily Dubbel,Completed,6.5,Belgian Dubbel,16.7
 51,2025-11-15,Darth Wheat,Completed,8.7,Weizenbock,20.8
 46,2025-09-09,Bees knees,Completed,6.8,Experimental Cider,5.4
 45,2025-09-09,White Lightning,Completed,7.4,Experimental Cider,7.3
 40,2025-07-06,Ghost barrel,Completed,10.2,Imperial Stout,29.6
-39,2025-07-01,Table 4,Completed,2.9,Table Saison,3.3
-31,2025-04-05,Table three,Completed,3.5,Table Saison,3.9
+39,2025-07-01,Table 4,Completed,2.9,Saison,3.3
+31,2025-04-05,Table three,Completed,3.5,Saison,3.9
+25,2025-01-18,Second Table,Completed,3.0,Table Saison,3.7

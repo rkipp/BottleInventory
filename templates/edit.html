@@ -39,6 +39,9 @@
                             {% for batch in batches %}
                             <option value="{{ batch }}" {% if row.FilledWith == batch %}selected{% endif %}>{{ batch }}</option>
                             {% endfor %}
+                            {% if row.FilledWith and row.FilledWith != 'Empty' and row.FilledWith not in batches %}
+                            <option value="{{ row.FilledWith }}" selected>{{ row.FilledWith }}</option>
+                            {% endif %}
                         </select>
                     </td>
                     <td><button type="button" class="delete-btn" onclick="deleteRow(this)">&#x2715;</button></td>
@@ -64,6 +67,10 @@
             batches.forEach(b => {
                 options += `<option value="${b}" ${selectedValue === b ? 'selected' : ''}>${b}</option>`;
             });
+            // Preserve any value not already in the list
+            if (selectedValue && selectedValue !== 'Empty' && !batches.includes(selectedValue)) {
+                options += `<option value="${selectedValue}" selected>${selectedValue}</option>`;
+            }
             return `<select name="FilledWith" class="filled-select">${options}</select>`;
         }
 

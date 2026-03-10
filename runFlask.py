@@ -7,8 +7,6 @@ import brewfather
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-in-production")
 
-inv = Inventory()
-
 # Password is set via environment variable ADMIN_PASSWORD
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "changeme")
 
@@ -72,8 +70,18 @@ def edit_inventory():
         inv.replace_inventory(new_data)
         return redirect(url_for("edit_inventory"))
 
-    batches = brewfather.get_batches()["name"].to_list()
-    return render_template("edit.html", inventory=inv.get_inventory(), batches=batches)
+    known = (
+        brewfather.get_batches()["name"].to_list()
+        + brewfather.get_whats_fermenting()["name"].to_list()
+    )
+    known_set = set(known)
+    # Also preserve any manually entered names already in the inventory
+    custom_fills = sorted({
+        item["FilledWith"] for item in inv.get_inventory()
+        if item["FilledWith"] and item["FilledWith"] not in ("Empty", None) and item["FilledWith"] not in known_set
+    })
+    all_fills = known + custom_fills
+    return render_template("edit.html", inventory=inv.get_inventory(), batches=all_fills)
 
 
 # ----------------------------------------------------------------------
@@ -87,6 +95,8 @@ def index():
     GET:  Public — anyone can view.
     POST: Protected — requires login. Actions: update, add, fill, empty, remove.
     """
+    inv = Inventory()
+
     if request.method == "POST":
         if not session.get("logged_in"):
             return redirect(url_for("login", next=url_for("index")))
@@ -94,13 +104,7 @@ def index():
         action = request.form["action"]
 
         if action == "update":
-            active_names = (
-                brewfather.get_batches()["name"].to_list()
-                + brewfather.get_whats_fermenting()["name"].to_list()
-            )
             brewfather.update_batches()
-            if active_names:
-                inv.auto_empty_archived(active_names)
             return redirect(url_for("index"))
 
         size        = int(request.form["bottle_size"])
@@ -175,6 +179,7 @@ def index():
 def bjcp():
     """Display the BJCP style guide with search, filtering, and inventory cross-reference."""
     import json
+    inv = Inventory()
 
     with open('./Data/bjcp_styleguide-2021.json') as f:
         styles = json.load(f)['beerjson']['styles']
